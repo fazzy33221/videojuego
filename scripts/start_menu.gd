@@ -103,6 +103,7 @@ func _create_page(page_name: String) -> Control:
 	var page := Control.new()
 	page.name = page_name
 	page.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	page.hide()
 	return page
 
 
