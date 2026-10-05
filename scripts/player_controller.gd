@@ -1,7 +1,6 @@
 extends CharacterBody3D
 
 const ANIMATION_CLIPS: Dictionary = {
-	"idle": "res://assets/models/zombies/player/walking.fbx",
 	"walk": "res://assets/models/zombies/player/walking.fbx",
 	"run": "res://assets/models/zombies/player/walking.fbx",
 	"jump": "res://assets/models/zombies/player/hit reaction.fbx",
@@ -26,6 +25,7 @@ const ANIMATION_CLIPS: Dictionary = {
 
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var character_animator: AnimationPlayer
+var character_skeleton: Skeleton3D
 var current_animation: StringName = &""
 var has_weapon: bool = false
 var weapon_node: Node3D
@@ -163,6 +163,7 @@ func _setup_character_rig() -> void:
 		character_animator.name = "AnimationPlayer"
 		model_pivot.add_child(character_animator)
 	character_animator.root_node = character_animator.get_path_to(character_model)
+	character_skeleton = character_model.find_child("Skeleton3D", true, false) as Skeleton3D
 	_load_animation_clips()
 
 
@@ -216,7 +217,7 @@ func _play_character_animation(animation_state: StringName) -> void:
 		selected_animation = animation_state
 	if selected_animation == &"idle":
 		if not character_animator.has_animation(selected_animation):
-			character_animator.stop()
+			_reset_character_pose()
 			current_animation = &""
 			return
 		current_animation = selected_animation
@@ -233,6 +234,12 @@ func _play_character_animation(animation_state: StringName) -> void:
 	current_animation = selected_animation
 	character_animator.speed_scale = 1.35 if animation_state == &"run" else 1.0
 	character_animator.play(selected_animation, 0.12)
+
+
+func _reset_character_pose() -> void:
+	character_animator.stop()
+	if is_instance_valid(character_skeleton):
+		character_skeleton.reset_bone_poses()
 
 
 func _unhandled_input(event: InputEvent) -> void:
