@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/game_manager.gd" id="1_manager"]
 [ext_resource type="PackedScene" path="res://scenes/player.tscn" id="2_player"]
 [ext_resource type="Script" path="res://scripts/mobile_controls.gd" id="3_mobile_controls"]
+[ext_resource type="Script" path="res://scripts/start_menu.gd" id="4_start_menu"]
 
 [node name="Game" type="Node3D"]
 script = ExtResource("1_manager")
@@ -51,3 +52,54 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("3_mobile_controls")
+
+[node name="StartMenu" type="Control" parent="HUD"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_start_menu")
+
+[node name="Backdrop" type="ColorRect" parent="HUD/StartMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.035, 0.043, 0.051, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="HUD/StartMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MenuContent" type="VBoxContainer" parent="HUD/StartMenu/CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 22
+alignment = 1
+
+[node name="Title" type="Label" parent="HUD/StartMenu/CenterContainer/MenuContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.91, 0.82, 0.58, 1)
+theme_override_font_sizes/font_size = 48
+text = "CDMX: ZONA CERO"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="HUD/StartMenu/CenterContainer/MenuContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.88, 0.86, 1)
+theme_override_font_sizes/font_size = 18
+text = "SOBREVIVE A LA INFECCION"
+horizontal_alignment = 1
+
+[node name="NewGameButton" type="Button" parent="HUD/StartMenu/CenterContainer/MenuContent"]
+custom_minimum_size = Vector2(280, 68)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "NUEVA PARTIDA"
