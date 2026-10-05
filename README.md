@@ -4,7 +4,7 @@ Base jugable en Godot 4 para una aventura de supervivencia en dos actos. El segu
 
 ## Ejecutar
 
-Abre `project.godot` con Godot 4 e inicia la escena principal. La pantalla de inicio muestra el boton **Nueva partida**. Godot importara los recursos 3D la primera vez.
+Abre `project.godot` con Godot 4 e inicia la escena principal. La pantalla de inicio ofrece **Nueva partida**, **Continuar**, una guia de controles y opciones de volumen y sensibilidad de camara. El progreso se guarda localmente en el dispositivo. Godot importara los recursos 3D la primera vez.
 
 ### Entorno de desarrollo en Codespaces
 
