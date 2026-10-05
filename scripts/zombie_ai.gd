@@ -127,17 +127,20 @@ func _physics_process(delta: float) -> void:
 			if repath_timer <= 0.0:
 				navigation_agent.target_position = target.global_position
 				repath_timer = repath_interval
-			var next_path_position := navigation_agent.get_next_path_position()
-			var current_path := navigation_agent.get_current_navigation_path()
-			if current_path.size() > 1 and navigation_agent.is_target_reachable():
-				var path_offset := next_path_position - global_position
-				path_offset.y = 0.0
-				if path_offset.length_squared() > 0.01:
-					desired_velocity = path_offset.normalized() * move_speed
-				else:
-					desired_velocity = flat_offset.normalized() * move_speed
+			if navigation_agent.is_navigation_finished():
+				desired_velocity = Vector3.ZERO
 			else:
-				desired_velocity = flat_offset.normalized() * move_speed
+				var next_path_position := navigation_agent.get_next_path_position()
+				var current_path := navigation_agent.get_current_navigation_path()
+				if current_path.size() > 1 and navigation_agent.is_target_reachable():
+					var path_offset := next_path_position - global_position
+					path_offset.y = 0.0
+					if path_offset.length_squared() > 0.01:
+						desired_velocity = path_offset.normalized() * move_speed
+					else:
+						desired_velocity = flat_offset.normalized() * move_speed
+				else:
+					desired_velocity = Vector3.ZERO
 		else:
 			desired_velocity = flat_offset.normalized() * move_speed
 		_move_with_avoidance(desired_velocity)

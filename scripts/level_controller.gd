@@ -8,7 +8,7 @@ extends Node3D
 func _ready() -> void:
 	_create_map_collisions()
 	$ExitTrigger.body_entered.connect(_on_exit_body_entered)
-	_bake_navigation_if_needed()
+	await _bake_navigation_if_needed()
 
 
 func _create_map_collisions() -> void:
@@ -57,7 +57,9 @@ func _bake_navigation_if_needed() -> void:
 	if navigation_region == null or navigation_region.navigation_mesh == null:
 		return
 	if navigation_region.navigation_mesh.get_polygon_count() == 0:
+		await get_tree().physics_frame
 		navigation_region.bake_navigation_mesh(true)
+		await get_tree().physics_frame
 
 
 func _on_exit_body_entered(body: Node3D) -> void:
