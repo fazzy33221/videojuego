@@ -1,0 +1,26 @@
+; Engine configuration file.
+; CDMX: Zona Cero - Godot 4
+
+config_version=5
+
+[application]
+
+config/name="CDMX: Zona Cero"
+run/main_scene="res://scenes/main.tscn"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/size/window_width_override=1280
+window/size/window_height_override=720
+
+[physics]
+
+3d/default_gravity=9.8
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.0352941, 0.0431373, 0.0509804, 1)
