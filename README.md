@@ -1,6 +1,6 @@
 # CDMX: Zona Cero
 
-Base jugable en Godot 4 para una aventura de supervivencia en dos actos. La partida inicia en Paseo de la Reforma y la mision es encontrar la ruta de evacuacion.
+Base jugable en Godot 4 para una aventura de supervivencia en dos actos. El segundo acto usa temporalmente el modelo de la estacion Ex Hacienda de Enmedio; el mapa de Reforma queda fuera del nivel mientras se elige otro entorno.
 
 ## Ejecutar
 
@@ -35,7 +35,7 @@ En Android:
 - `Modelos 3d/` y `mapa 3D/`: recursos originales conservados
 - `Player/ModelPivot/CharacterModel` en `scenes/player.tscn`: modelo principal X Bot
 
-Reforma instancia el mapa GLTF original con escala uniforme 100 y posicion local `(0, -10, 0)` para compensar la altura del origen importado. El modelo mide aproximadamente 506 x 88 x 368 m despues de importarse y escalarse; la escena conserva sus proporciones y geometria. La prueba independiente `scenes/levels/reforma_map_test.tscn` contiene la reticula urbana procedural de 5 x 5 manzanas. El nivel principal usa iluminacion ambiental neutral, genera una colision estatica agrupada para el mapa y hornea la navegacion de forma asincrona. Los zombies esperan a que NavigationServer sincronice la malla y se alinean con el suelo fisico antes de perseguir. El jugador aparece en el marcador sobre la superficie medida del modelo; la camara conserva su far clip predeterminado de 4000 m. Los niveles hornean una malla de navegacion desde los nodos del grupo `navigation_mesh_source_group`; para integrar geometria nueva, agregala a ese grupo. La camara sigue suavemente desde un pivote independiente del giro del personaje, y al estar quieto el modelo vuelve a su pose de reposo sin reutilizar un fotograma de caminata como postura de arma.
+El nivel principal instancia `Modelos 3d/v1_metro_ex_hacienda_de_enmedio.glb` temporalmente a escala original. El controlador genera colisiones estaticas para la geometria del mapa y hornea la navegacion de forma asincrona. Los nodos del mapa se agregan al grupo `navigation_mesh_source_group` para construir la malla de navegacion. El jugador aparece encima del centro del modelo y cae hasta la superficie. La escena `scenes/levels/reforma_map_test.tscn` se conserva como prueba independiente del mapa urbano anterior.
 
 ### Probar el mapa de Reforma
 
