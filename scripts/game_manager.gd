@@ -8,6 +8,7 @@ const ACT_TWO: PackedScene = preload("res://scenes/levels/act_two.tscn")
 @onready var status_label: Label = $HUD/Status
 @onready var health_label: Label = $HUD/Health
 @onready var mobile_controls: Control = $HUD/MobileControls
+@onready var start_menu: Control = $HUD/StartMenu
 
 var active_level: Node3D
 var changing_level: bool = false
@@ -15,15 +16,34 @@ var changing_level: bool = false
 
 func _ready() -> void:
 	add_to_group("game_manager")
-	mobile_controls.visible = OS.has_feature("mobile")
-	if mobile_controls.visible:
-		mobile_controls.connect("movement_changed", Callable(player, "set_mobile_movement_input"))
-		mobile_controls.connect("look_changed", Callable(player, "apply_mobile_look"))
-		mobile_controls.connect("jump_requested", Callable(player, "request_mobile_jump"))
-		mobile_controls.connect("sprint_changed", Callable(player, "set_mobile_sprint_pressed"))
-		mobile_controls.connect("flashlight_requested", Callable(player, "toggle_flashlight"))
-	_start_level(ACT_TWO)
+	mobile_controls.visible = false
+	mobile_controls.connect("movement_changed", Callable(player, "set_mobile_movement_input"))
+	mobile_controls.connect("look_changed", Callable(player, "apply_mobile_look"))
+	mobile_controls.connect("jump_requested", Callable(player, "request_mobile_jump"))
+	mobile_controls.connect("sprint_changed", Callable(player, "set_mobile_sprint_pressed"))
+	mobile_controls.connect("flashlight_requested", Callable(player, "toggle_flashlight"))
+	start_menu.connect("new_game_requested", Callable(self, "_start_new_game"))
+	player.visible = false
+	player.set_physics_process(false)
+	level_container.visible = false
+	objective_label.visible = false
+	status_label.visible = false
+	health_label.visible = false
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
+
+func _start_new_game() -> void:
+	start_menu.visible = false
+	player.visible = true
+	player.set_physics_process(true)
+	level_container.visible = true
+	objective_label.visible = true
+	status_label.visible = true
+	health_label.visible = true
+	mobile_controls.visible = OS.has_feature("mobile")
+	if not mobile_controls.visible:
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	_start_level(ACT_TWO)
 
 func advance_to(next_level: PackedScene) -> void:
 	if changing_level:
