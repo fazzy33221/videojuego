@@ -33,6 +33,14 @@ var weapon_visual_defaults: Dictionary = {}
 var weapon_collision_defaults: Dictionary = {}
 
 
+func setup_spawn(spawn_pos: Vector3, spawn_rot_y: float) -> void:
+	global_position = spawn_pos
+	rotation.y = spawn_rot_y
+	velocity = Vector3.ZERO
+	camera_pivot.global_position = global_position + Vector3.UP * 1.5
+	camera_pivot.rotation.y = spawn_rot_y
+
+
 func _ready() -> void:
 	if not weapon_node_path.is_empty():
 		weapon_node = get_node_or_null(weapon_node_path) as Node3D
@@ -214,6 +222,15 @@ func _unhandled_input(event: InputEvent) -> void:
 			-0.75,
 			0.65
 		)
+	elif event is InputEventScreenDrag:
+		# Only rotate camera if drag is on the right half of the screen
+		if event.position.x > get_viewport().get_visible_rect().size.x * 0.5:
+			camera_pivot.rotation.y -= event.relative.x * mouse_sensitivity * 1.5
+			camera_pivot.rotation.x = clampf(
+				camera_pivot.rotation.x - event.relative.y * mouse_sensitivity * 1.5,
+				-0.75,
+				0.65
+			)
 	elif event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_ESCAPE:
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -221,6 +238,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			flashlight.visible = not flashlight.visible
 	elif event is InputEventMouseButton and event.pressed:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	elif event.is_action_pressed("flashlight_mobile"):
+		flashlight.visible = not flashlight.visible
 
 
 func _physics_process(delta: float) -> void:
@@ -228,6 +247,11 @@ func _physics_process(delta: float) -> void:
 		Input.get_axis(&"move_left", &"move_right"),
 		Input.get_axis(&"move_backward", &"move_forward")
 	).limit_length()
+
+	# Add mobile joystick input
+	var mobile_controls = get_tree().root.get_node_or_null("Game/HUD/MobileControls")
+	if mobile_controls != null and mobile_controls.movement_vector != Vector2.ZERO:
+		movement_input = mobile_controls.movement_vector
 	var camera_basis := camera_pivot.global_transform.basis
 	var camera_right := camera_basis.x
 	var camera_forward := -camera_basis.z
@@ -236,13 +260,13 @@ func _physics_process(delta: float) -> void:
 	var direction := camera_right.normalized() * movement_input.x
 	direction += camera_forward.normalized() * movement_input.y
 	direction = direction.normalized()
-	var movement_speed := sprint_speed if Input.is_key_pressed(KEY_SHIFT) else walk_speed
+	var movement_speed := sprint_speed if Input.is_key_pressed(KEY_SHIFT) or Input.is_action_pressed("sprint_mobile") else walk_speed
 	velocity.x = direction.x * movement_speed
 	velocity.z = direction.z * movement_speed
 
 	if not is_on_floor():
 		velocity.y -= gravity * delta
-	elif Input.is_key_pressed(KEY_SPACE):
+	elif Input.is_key_pressed(KEY_SPACE) or Input.is_action_pressed("jump_mobile"):
 		velocity.y = jump_velocity
 
 	if not direction.is_zero_approx():
@@ -251,7 +275,7 @@ func _physics_process(delta: float) -> void:
 
 	var animation_state: StringName = &"jump" if not is_on_floor() else &"idle"
 	if is_on_floor() and not movement_input.is_zero_approx():
-		animation_state = &"run" if Input.is_key_pressed(KEY_SHIFT) else &"walk"
+		animation_state = &"run" if Input.is_key_pressed(KEY_SHIFT) or Input.is_action_pressed("sprint_mobile") else &"walk"
 	_play_character_animation(animation_state)
 
 	move_and_slide()

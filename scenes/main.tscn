@@ -1,6 +1,7 @@
 [gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/game_manager.gd" id="1_manager"]
+[ext_resource type="PackedScene" path="res://scenes/mobile_controls.tscn" id="3_mobile"]
 [ext_resource type="PackedScene" path="res://scenes/player.tscn" id="2_player"]
 
 [node name="Game" type="Node3D"]
@@ -11,6 +12,8 @@ script = ExtResource("1_manager")
 [node name="LevelContainer" type="Node3D" parent="."]
 
 [node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="MobileControls" parent="HUD" instance=ExtResource("3_mobile")]
 
 [node name="Objective" type="Label" parent="HUD"]
 offset_left = 24.0

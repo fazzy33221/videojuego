@@ -12,14 +12,24 @@ func _ready() -> void:
 
 
 func _create_map_collisions() -> void:
-	var map_root := get_node_or_null("ReformaEnvironment/MapGeometry") as Node3D
-	if map_root == null:
-		return
-
-	for node in map_root.find_children("*", "MeshInstance3D", true, false):
+	# Find all MeshInstance3D nodes that need collisions
+	for node in find_children("*", "MeshInstance3D", true, false):
 		var mesh_instance := node as MeshInstance3D
 		if mesh_instance.mesh == null:
 			continue
+
+		# Skip if it already has collision
+		var has_collision = false
+		for child in mesh_instance.get_children():
+			if child is CollisionObject3D:
+				has_collision = true
+				break
+		if mesh_instance.get_parent() is CollisionObject3D:
+			has_collision = true
+
+		if has_collision:
+			continue
+
 		var shape := mesh_instance.mesh.create_trimesh_shape()
 		if shape == null:
 			continue

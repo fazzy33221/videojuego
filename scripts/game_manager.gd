@@ -1,5 +1,6 @@
 extends Node3D
 
+const ACT_ONE: PackedScene = preload("res://scenes/levels/act_one.tscn")
 const ACT_TWO: PackedScene = preload("res://scenes/levels/act_two.tscn")
 
 @onready var player: CharacterBody3D = $Player
@@ -14,7 +15,7 @@ var changing_level: bool = false
 
 func _ready() -> void:
 	add_to_group("game_manager")
-	_start_level(ACT_TWO)
+	_start_level(ACT_ONE)
 
 
 func advance_to(next_level: PackedScene) -> void:
@@ -38,11 +39,9 @@ func _start_level(level_scene: PackedScene) -> void:
 	level_container.add_child(active_level)
 	var spawn_marker := active_level.get_node_or_null("PlayerSpawn") as Node3D
 	if spawn_marker != null:
-		player.global_position = spawn_marker.global_position + Vector3.UP * 0.05
-		player.rotation.y = spawn_marker.global_rotation.y
+		player.setup_spawn(spawn_marker.global_position + Vector3.UP * 0.05, spawn_marker.global_rotation.y)
 	else:
-		player.global_position = Vector3(0.0, 0.05, 0.0)
-	player.velocity = Vector3.ZERO
+		player.setup_spawn(Vector3(0.0, 0.05, 0.0), 0.0)
 	player.health = 100.0
 	update_health(player.health)
 	objective_label.text = str(active_level.get("act_title"))
