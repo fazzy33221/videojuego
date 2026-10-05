@@ -20,9 +20,14 @@ jobs:
           lfs: true
 
       - name: Import Godot resources
+        # The godot-ci image stores Android templates and editor settings under /root.
+        env:
+          HOME: /root
         run: godot --headless --editor --path . --quit
 
       - name: Export Android APK
+        env:
+          HOME: /root
         run: |
           mkdir -p build/android
           godot --headless --path . --export-debug "Android Debug" build/android/juego.apk
