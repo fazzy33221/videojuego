@@ -31,6 +31,34 @@ var has_weapon: bool = false
 var weapon_node: Node3D
 var weapon_visual_defaults: Dictionary = {}
 var weapon_collision_defaults: Dictionary = {}
+var mobile_movement_input: Vector2 = Vector2.ZERO
+var mobile_sprint_pressed: bool = false
+var mobile_jump_requested: bool = false
+
+
+func set_mobile_movement_input(value: Vector2) -> void:
+	mobile_movement_input = value.limit_length()
+
+
+func set_mobile_sprint_pressed(pressed: bool) -> void:
+	mobile_sprint_pressed = pressed
+
+
+func request_mobile_jump() -> void:
+	mobile_jump_requested = true
+
+
+func apply_mobile_look(delta: Vector2) -> void:
+	camera_pivot.rotation.y -= delta.x * mouse_sensitivity
+	camera_pivot.rotation.x = clampf(
+		camera_pivot.rotation.x - delta.y * mouse_sensitivity,
+		-0.75,
+		0.65
+	)
+
+
+func toggle_flashlight() -> void:
+	flashlight.visible = not flashlight.visible
 
 
 func _ready() -> void:
@@ -225,10 +253,11 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _physics_process(delta: float) -> void:
-	var movement_input := Vector2(
+	var keyboard_input := Vector2(
 		Input.get_axis(&"move_left", &"move_right"),
 		Input.get_axis(&"move_backward", &"move_forward")
-	).limit_length()
+	)
+	var movement_input := (keyboard_input + mobile_movement_input).limit_length()
 	var camera_basis := camera_pivot.global_transform.basis
 	var camera_right := camera_basis.x
 	var camera_forward := -camera_basis.z
@@ -237,13 +266,16 @@ func _physics_process(delta: float) -> void:
 	var direction := camera_right.normalized() * movement_input.x
 	direction += camera_forward.normalized() * movement_input.y
 	direction = direction.normalized()
-	var movement_speed := sprint_speed if Input.is_key_pressed(KEY_SHIFT) else walk_speed
+	var sprinting := Input.is_key_pressed(KEY_SHIFT) or mobile_sprint_pressed
+	var movement_speed := sprint_speed if sprinting else walk_speed
 	velocity.x = direction.x * movement_speed
 	velocity.z = direction.z * movement_speed
 
+	var jump_pressed := Input.is_key_pressed(KEY_SPACE) or mobile_jump_requested
+	mobile_jump_requested = false
 	if not is_on_floor():
 		velocity.y -= gravity * delta
-	elif Input.is_key_pressed(KEY_SPACE):
+	elif jump_pressed:
 		velocity.y = jump_velocity
 
 	if not direction.is_zero_approx():
@@ -252,7 +284,7 @@ func _physics_process(delta: float) -> void:
 
 	var animation_state: StringName = &"jump" if not is_on_floor() else &"idle"
 	if is_on_floor() and not movement_input.is_zero_approx():
-		animation_state = &"run" if Input.is_key_pressed(KEY_SHIFT) else &"walk"
+		animation_state = &"run" if sprinting else &"walk"
 	_play_character_animation(animation_state)
 
 	move_and_slide()
