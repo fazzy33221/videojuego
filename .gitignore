@@ -1,0 +1,9 @@
+node_modules/
+__pycache__/
+target/
+coverage/
+*.import
+.godot/
+Modelos 3d/
+mapa 3D/
+assets/

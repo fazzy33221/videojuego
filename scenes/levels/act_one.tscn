@@ -1,0 +1,82 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/level_controller.gd" id="1_level"]
+[ext_resource type="PackedScene" path="res://Modelos 3d/v1_metro_ex_hacienda_de_enmedio.glb" id="2_metro"]
+[ext_resource type="PackedScene" path="res://scenes/zombie.tscn" id="3_zombie"]
+[ext_resource type="PackedScene" path="res://scenes/levels/act_two.tscn" id="4_next"]
+[ext_resource type="Script" path="res://scripts/emergency_alarm.gd" id="5_alarm"]
+
+[sub_resource type="BoxShape3D" id="FloorCollision"]
+size = Vector3(200, 1, 200)
+
+[sub_resource type="PlaneMesh" id="FloorMesh"]
+size = Vector2(200, 200)
+
+[sub_resource type="StandardMaterial3D" id="FloorMaterial"]
+albedo_color = Color(0.075, 0.082, 0.086, 1)
+roughness = 1.0
+
+[sub_resource type="BoxShape3D" id="ExitShape"]
+size = Vector3(5, 3, 3)
+
+[sub_resource type="NavigationMesh" id="LevelNavigationMesh"]
+agent_height = 1.8
+agent_radius = 0.45
+agent_max_climb = 0.3
+cell_size = 0.25
+cell_height = 0.2
+geometry_parsed_geometry_type = 2
+geometry_source_geometry_mode = 1
+geometry_source_group_name = "navigation_mesh_source_group"
+filter_ledge_spans = true
+
+[node name="ActOneMetro" type="Node3D"]
+script = ExtResource("1_level")
+act_title = "ACTO 1  |  METRO: ESCAPE A LA SUPERFICIE"
+act_hint = "Encuentra la salida a la superficie"
+next_level = ExtResource("4_next")
+
+[node name="MetroEnvironment" parent="." groups=["navigation_mesh_source_group"] instance=ExtResource("2_metro")]
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+navigation_mesh = SubResource("LevelNavigationMesh")
+
+[node name="Floor" type="StaticBody3D" parent="."]
+collision_layer = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+position = Vector3(0, -0.5, 0)
+shape = SubResource("FloorCollision")
+
+[node name="FloorVisual" type="MeshInstance3D" parent="Floor" groups=["navigation_mesh_source_group"]]
+position = Vector3(0, -0.02, 0)
+mesh = SubResource("FloorMesh")
+surface_material_override/0 = SubResource("FloorMaterial")
+
+[node name="AmbientLight" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-45, -25, 0)
+light_color = Color(0.48, 0.53, 0.59, 1)
+light_energy = 0.16
+
+[node name="EmergencyAlarm" type="OmniLight3D" parent="."]
+position = Vector3(0, 4, -12)
+light_color = Color(1, 0.08, 0.025, 1)
+omni_range = 24.0
+script = ExtResource("5_alarm")
+
+[node name="ZombieA" parent="." instance=ExtResource("3_zombie")]
+position = Vector3(7, 0, -12)
+
+[node name="ZombieB" parent="." instance=ExtResource("3_zombie")]
+position = Vector3(-8, 0, -22)
+
+[node name="ZombieC" parent="." instance=ExtResource("3_zombie")]
+position = Vector3(4, 0, -34)
+
+[node name="ExitTrigger" type="Area3D" parent="."]
+position = Vector3(0, 1.5, -58)
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ExitTrigger"]
+shape = SubResource("ExitShape")
