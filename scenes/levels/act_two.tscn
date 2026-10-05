@@ -72,7 +72,7 @@ navigation_mesh = SubResource("LevelNavigationMesh")
 environment = SubResource("UrbanEnvironment")
 
 [node name="PlayerSpawn" type="Marker3D" parent="."]
-position = Vector3(0, 0.5, -8)
+position = Vector3(0, 5.25, -8)
 
 [node name="Daylight" type="DirectionalLight3D" parent="."]
 rotation_degrees = Vector3(-52, -28, 0)
