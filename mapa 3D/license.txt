@@ -1,0 +1,11 @@
+Model Information:
+* title:	Paseo de la Reforma, CDMX
+* source:	https://sketchfab.com/3d-models/paseo-de-la-reforma-cdmx-d1a0c333d31c4917b2db5db4d5d28dc9
+* author:	Ricardo Garnica (https://sketchfab.com/rjgarnicap)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Paseo de la Reforma, CDMX" (https://sketchfab.com/3d-models/paseo-de-la-reforma-cdmx-d1a0c333d31c4917b2db5db4d5d28dc9) by Ricardo Garnica (https://sketchfab.com/rjgarnicap) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

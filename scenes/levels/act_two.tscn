@@ -1,0 +1,147 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://scripts/level_controller.gd" id="1_level"]
+[ext_resource type="PackedScene" path="res://mapa 3D/scene.gltf" id="2_reforma"]
+[ext_resource type="PackedScene" path="res://Modelos 3d/simple_taxi_cdmx.glb" id="3_taxi"]
+[ext_resource type="PackedScene" path="res://Modelos 3d/destroyed_car_03__backrooms_car_gameready_ver.glb" id="4_wreck"]
+[ext_resource type="PackedScene" path="res://scenes/zombie.tscn" id="5_zombie"]
+
+[sub_resource type="BoxShape3D" id="ExitShape"]
+size = Vector3(7, 3, 3)
+
+[sub_resource type="CylinderMesh" id="AngelBase"]
+top_radius = 1.05
+bottom_radius = 1.4
+height = 0.6
+
+[sub_resource type="CylinderMesh" id="AngelColumn"]
+top_radius = 0.42
+bottom_radius = 0.62
+height = 7.5
+
+[sub_resource type="CylinderMesh" id="AngelCapital"]
+top_radius = 0.8
+bottom_radius = 0.65
+height = 0.55
+
+[sub_resource type="SphereMesh" id="AngelFigure"]
+radius = 0.35
+height = 1.0
+
+[sub_resource type="StandardMaterial3D" id="AngelGold"]
+albedo_color = Color(0.79, 0.57, 0.21, 1)
+metallic = 0.65
+roughness = 0.34
+
+[sub_resource type="NavigationMesh" id="LevelNavigationMesh"]
+agent_height = 1.8
+agent_radius = 0.45
+agent_max_climb = 0.3
+cell_size = 0.25
+cell_height = 0.25
+geometry_parsed_geometry_type = 2
+geometry_source_geometry_mode = 1
+geometry_source_group_name = "navigation_mesh_source_group"
+filter_ledge_spans = true
+
+[sub_resource type="Environment" id="UrbanEnvironment"]
+background_mode = 1
+background_color = Color(0.055, 0.071, 0.105, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.32, 0.38, 0.52, 1)
+ambient_light_energy = 0.7
+ambient_light_sky_contribution = 0.0
+
+[node name="ActTwoReforma" type="Node3D"]
+script = ExtResource("1_level")
+act_title = "PASEO DE LA REFORMA  |  BUSCA LA EVACUACION"
+act_hint = "Rodea el Angel y encuentra la ruta de evacuacion al norte"
+
+[node name="ReformaEnvironment" type="Node3D" parent="." groups=["navigation_mesh_source_group"]]
+position = Vector3(0, 0, 0)
+rotation_degrees = Vector3(0, 0, 0)
+scale = Vector3(100, 100, 100)
+
+[node name="MapGeometry" parent="ReformaEnvironment" instance=ExtResource("2_reforma")]
+position = Vector3(0, -0.1, 0)
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+navigation_mesh = SubResource("LevelNavigationMesh")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("UrbanEnvironment")
+
+[node name="PlayerSpawn" type="Marker3D" parent="."]
+position = Vector3(0, 0, -8)
+
+[node name="Daylight" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-52, -28, 0)
+light_color = Color(1, 0.68, 0.42, 1)
+light_energy = 1.35
+shadow_enabled = true
+
+[node name="TaxiNorth" parent="." groups=["navigation_mesh_source_group"] instance=ExtResource("3_taxi")]
+position = Vector3(5, 0, -8)
+rotation_degrees = Vector3(0, 90, 0)
+scale = Vector3(0.8, 0.8, 0.8)
+
+[node name="TaxiWreck" parent="." groups=["navigation_mesh_source_group"] instance=ExtResource("4_wreck")]
+position = Vector3(-5, 0, -17)
+rotation_degrees = Vector3(0, -18, 0)
+scale = Vector3(0.8, 0.8, 0.8)
+
+[node name="AngelLandmark" type="Node3D" parent="." groups=["navigation_mesh_source_group"]]
+position = Vector3(0, 0, -27)
+
+[node name="Pedestal" type="MeshInstance3D" parent="AngelLandmark"]
+position = Vector3(0, 0.3, 0)
+mesh = SubResource("AngelBase")
+surface_material_override/0 = SubResource("AngelGold")
+
+[node name="Column" type="MeshInstance3D" parent="AngelLandmark"]
+position = Vector3(0, 4.35, 0)
+mesh = SubResource("AngelColumn")
+surface_material_override/0 = SubResource("AngelGold")
+
+[node name="Capital" type="MeshInstance3D" parent="AngelLandmark"]
+position = Vector3(0, 8.25, 0)
+mesh = SubResource("AngelCapital")
+surface_material_override/0 = SubResource("AngelGold")
+
+[node name="Angel" type="MeshInstance3D" parent="AngelLandmark"]
+position = Vector3(0, 8.95, 0)
+scale = Vector3(0.55, 1.0, 0.55)
+mesh = SubResource("AngelFigure")
+surface_material_override/0 = SubResource("AngelGold")
+
+[node name="ZombieA" parent="." instance=ExtResource("5_zombie")]
+position = Vector3(12, 0, -27)
+detection_range = 40.0
+
+[node name="ZombieB" parent="." instance=ExtResource("5_zombie")]
+position = Vector3(-12, 0, -27)
+detection_range = 40.0
+
+[node name="ZombieC" parent="." instance=ExtResource("5_zombie")]
+position = Vector3(8, 0, -18)
+detection_range = 40.0
+
+[node name="ZombieD" parent="." instance=ExtResource("5_zombie")]
+position = Vector3(-8, 0, -18)
+detection_range = 40.0
+
+[node name="ZombieE" parent="." instance=ExtResource("5_zombie")]
+position = Vector3(8, 0, -36)
+detection_range = 40.0
+
+[node name="ZombieF" parent="." instance=ExtResource("5_zombie")]
+position = Vector3(-8, 0, -36)
+detection_range = 40.0
+
+[node name="ExitTrigger" type="Area3D" parent="."]
+position = Vector3(0, 1.5, -62)
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ExitTrigger"]
+shape = SubResource("ExitShape")

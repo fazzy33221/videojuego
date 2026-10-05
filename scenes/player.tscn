@@ -1,0 +1,40 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/player_controller.gd" id="1_player"]
+[ext_resource type="PackedScene" path="res://assets/models/zombies/player/X Bot.fbx" id="2_character"]
+
+[sub_resource type="CapsuleShape3D" id="PlayerCapsule"]
+radius = 0.38
+height = 1.8
+
+[node name="Player" type="CharacterBody3D"]
+collision_layer = 1
+collision_mask = 3
+script = ExtResource("1_player")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.9, 0)
+shape = SubResource("PlayerCapsule")
+
+[node name="ModelPivot" type="Node3D" parent="."]
+
+[node name="CharacterModel" parent="ModelPivot" instance=ExtResource("2_character")]
+
+[node name="CameraPivot" type="Node3D" parent="."]
+position = Vector3(0, 1.5, 0)
+top_level = true
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraPivot"]
+spring_length = 4.2
+collision_mask = 1
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot/SpringArm3D"]
+current = true
+fov = 75.0
+
+[node name="Flashlight" type="SpotLight3D" parent="CameraPivot/SpringArm3D/Camera3D"]
+light_color = Color(0.86, 0.91, 1, 1)
+light_energy = 3.2
+shadow_enabled = true
+spot_range = 28.0
+spot_angle = 32.0

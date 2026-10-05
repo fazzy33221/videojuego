@@ -1,0 +1,255 @@
+ .github/workflows/build_apk.yml                                  |   34 [32m+[m
+ .gitignore                                                       |    3 [32m+[m
+ Modelos 3d/Scary Zombie Pack.zip                                 |  Bin [31m0[m -> [32m3035030[m bytes
+ Modelos 3d/Walking.fbx                                           |  Bin [31m0[m -> [32m2237296[m bytes
+ Modelos 3d/Walking.fbx.import                                    |   46 [32m+[m
+ Modelos 3d/barrel_pack_-_low_poly_props.glb                      |  Bin [31m0[m -> [32m694968[m bytes
+ Modelos 3d/barrel_pack_-_low_poly_props.glb.import               |   45 [32m+[m
+ Modelos 3d/barrel_pack_-_low_poly_props_0.jpg                    |  Bin [31m0[m -> [32m45520[m bytes
+ Modelos 3d/barrel_pack_-_low_poly_props_0.jpg.import             |   43 [32m+[m
+ Modelos 3d/barrel_pack_-_low_poly_props_1.jpg                    |  Bin [31m0[m -> [32m160729[m bytes
+ Modelos 3d/barrel_pack_-_low_poly_props_1.jpg.import             |   43 [32m+[m
+ Modelos 3d/barrel_pack_-_low_poly_props_2.jpg                    |  Bin [31m0[m -> [32m86940[m bytes
+ Modelos 3d/barrel_pack_-_low_poly_props_2.jpg.import             |   43 [32m+[m
+ Modelos 3d/barrel_pack_-_low_poly_props_3.jpg                    |  Bin [31m0[m -> [32m156278[m bytes
+ Modelos 3d/barrel_pack_-_low_poly_props_3.jpg.import             |   43 [32m+[m
+ Modelos 3d/barrel_pack_-_low_poly_props_4.jpg                    |  Bin [31m0[m -> [32m118790[m bytes
+ Modelos 3d/barrel_pack_-_low_poly_props_4.jpg.import             |   43 [32m+[m
+ Modelos 3d/build.gradle.kts                                      |  136 [32m+[m
+ Modelos 3d/destroyed_car_03__backrooms_car_gameready_ver.glb     |  Bin [31m0[m -> [32m5867748[m bytes
+ .../destroyed_car_03__backrooms_car_gameready_ver.glb.import     |   45 [32m+[m
+ Modelos 3d/destroyed_car_03__backrooms_car_gameready_ver_0.png   |  Bin [31m0[m -> [32m1590801[m bytes
+ .../destroyed_car_03__backrooms_car_gameready_ver_0.png.import   |   43 [32m+[m
+ Modelos 3d/destroyed_car_03__backrooms_car_gameready_ver_1.png   |  Bin [31m0[m -> [32m1795270[m bytes
+ .../destroyed_car_03__backrooms_car_gameready_ver_1.png.import   |   43 [32m+[m
+ Modelos 3d/destroyed_car_03__backrooms_car_gameready_ver_2.png   |  Bin [31m0[m -> [32m1726261[m bytes
+ .../destroyed_car_03__backrooms_car_gameready_ver_2.png.import   |   43 [32m+[m
+ Modelos 3d/gradle.properties                                     |   28 [32m+[m
+ Modelos 3d/proguard-rules.pro                                    |   21 [32m+[m
+ Modelos 3d/settings.gradle.kts                                   |   27 [32m+[m
+ Modelos 3d/simple_taxi_cdmx.glb                                  |  Bin [31m0[m -> [32m1333288[m bytes
+ Modelos 3d/simple_taxi_cdmx.glb.import                           |   45 [32m+[m
+ Modelos 3d/simple_taxi_cdmx_0.jpg                                |  Bin [31m0[m -> [32m46364[m bytes
+ Modelos 3d/simple_taxi_cdmx_0.jpg.import                         |   43 [32m+[m
+ Modelos 3d/simple_taxi_cdmx_1.jpg                                |  Bin [31m0[m -> [32m69807[m bytes
+ Modelos 3d/simple_taxi_cdmx_1.jpg.import                         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio.glb                   |  Bin [31m0[m -> [32m12322540[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio.glb.import            |   45 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_0.png                 |  Bin [31m0[m -> [32m8322[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_0.png.import          |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_1.png                 |  Bin [31m0[m -> [32m5751[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_1.png.import          |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_10.png                |  Bin [31m0[m -> [32m25220[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_10.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_11.png                |  Bin [31m0[m -> [32m16704[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_11.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_12.png                |  Bin [31m0[m -> [32m27016[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_12.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_13.png                |  Bin [31m0[m -> [32m4559[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_13.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_14.png                |  Bin [31m0[m -> [32m16462[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_14.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_15.png                |  Bin [31m0[m -> [32m23376[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_15.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_16.png                |  Bin [31m0[m -> [32m111090[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_16.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_17.png                |  Bin [31m0[m -> [32m5614[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_17.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_18.png                |  Bin [31m0[m -> [32m11175[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_18.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_19.png                |  Bin [31m0[m -> [32m28938[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_19.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_2.png                 |  Bin [31m0[m -> [32m29960[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_2.png.import          |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_20.png                |  Bin [31m0[m -> [32m29703[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_20.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_21.png                |  Bin [31m0[m -> [32m26653[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_21.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_22.png                |  Bin [31m0[m -> [32m25496[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_22.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_23.png                |  Bin [31m0[m -> [32m16781[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_23.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_24.png                |  Bin [31m0[m -> [32m23223[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_24.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_25.png                |  Bin [31m0[m -> [32m21580[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_25.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_26.png                |  Bin [31m0[m -> [32m33176[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_26.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_27.png                |  Bin [31m0[m -> [32m14608[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_27.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_28.png                |  Bin [31m0[m -> [32m14579[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_28.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_29.jpg                |  Bin [31m0[m -> [32m12811[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_29.jpg.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_3.jpg                 |  Bin [31m0[m -> [32m15972[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_3.jpg.import          |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_30.png                |  Bin [31m0[m -> [32m1566578[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_30.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_31.png                |  Bin [31m0[m -> [32m886294[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_31.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_32.png                |  Bin [31m0[m -> [32m63385[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_32.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_33.png                |  Bin [31m0[m -> [32m2144235[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_33.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_34.png                |  Bin [31m0[m -> [32m107585[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_34.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_35.png                |  Bin [31m0[m -> [32m59891[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_35.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_36.png                |  Bin [31m0[m -> [32m1271[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_36.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_37.png                |  Bin [31m0[m -> [32m95943[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_37.png.import         |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_4.png                 |  Bin [31m0[m -> [32m11229[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_4.png.import          |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_5.png                 |  Bin [31m0[m -> [32m28773[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_5.png.import          |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_6.png                 |  Bin [31m0[m -> [32m5217[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_6.png.import          |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_7.png                 |  Bin [31m0[m -> [32m45364[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_7.png.import          |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_8.png                 |  Bin [31m0[m -> [32m29643[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_8.png.import          |   43 [32m+[m
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_9.png                 |  Bin [31m0[m -> [32m26950[m bytes
+ Modelos 3d/v1_metro_ex_hacienda_de_enmedio_9.png.import          |   43 [32m+[m
+ README.md                                                        |    6 [32m+[m[31m-[m
+ assets/models/zombies/X Bot.fbx                                  |  Bin [31m0[m -> [32m5148033[m bytes
+ assets/models/zombies/X Bot.fbx.import                           |   46 [32m+[m
+ assets/models/zombies/player/X Bot.fbx                           |  Bin [31m0[m -> [32m5148033[m bytes
+ assets/models/zombies/player/X Bot.fbx.import                    |   46 [32m+[m
+ assets/models/zombies/player/firing rifle.fbx                    |  Bin [31m0[m -> [32m340177[m bytes
+ assets/models/zombies/player/firing rifle.fbx.import             |   46 [32m+[m
+ assets/models/zombies/player/hit reaction.fbx                    |  Bin [31m0[m -> [32m385281[m bytes
+ assets/models/zombies/player/hit reaction.fbx.import             |   46 [32m+[m
+ assets/models/zombies/player/reloading.fbx                       |  Bin [31m0[m -> [32m639313[m bytes
+ assets/models/zombies/player/reloading.fbx.import                |   46 [32m+[m
+ assets/models/zombies/player/rifle aiming idle.fbx               |  Bin [31m0[m -> [32m597217[m bytes
+ assets/models/zombies/player/rifle aiming idle.fbx.import        |   46 [32m+[m
+ assets/models/zombies/player/rifle jump.fbx                      |  Bin [31m0[m -> [32m324881[m bytes
+ assets/models/zombies/player/rifle jump.fbx.import               |   46 [32m+[m
+ assets/models/zombies/player/rifle run.fbx                       |  Bin [31m0[m -> [32m342417[m bytes
+ assets/models/zombies/player/rifle run.fbx.import                |   46 [32m+[m
+ assets/models/zombies/player/run backwards.fbx                   |  Bin [31m0[m -> [32m319521[m bytes
+ assets/models/zombies/player/run backwards.fbx.import            |   46 [32m+[m
+ assets/models/zombies/player/strafe (2).fbx                      |  Bin [31m0[m -> [32m313105[m bytes
+ assets/models/zombies/player/strafe (2).fbx.import               |   46 [32m+[m
+ assets/models/zombies/player/strafe left.fbx                     |  Bin [31m0[m -> [32m379601[m bytes
+ assets/models/zombies/player/strafe left.fbx.import              |   46 [32m+[m
+ assets/models/zombies/player/strafe right.fbx                    |  Bin [31m0[m -> [32m423409[m bytes
+ assets/models/zombies/player/strafe right.fbx.import             |   46 [32m+[m
+ assets/models/zombies/player/strafe.fbx                          |  Bin [31m0[m -> [32m316417[m bytes
+ assets/models/zombies/player/strafe.fbx.import                   |   46 [32m+[m
+ assets/models/zombies/player/toss grenade.fbx                    |  Bin [31m0[m -> [32m619041[m bytes
+ assets/models/zombies/player/toss grenade.fbx.import             |   46 [32m+[m
+ assets/models/zombies/player/turn left.fbx                       |  Bin [31m0[m -> [32m368257[m bytes
+ assets/models/zombies/player/turn left.fbx.import                |   46 [32m+[m
+ assets/models/zombies/player/turning right 45 degrees.fbx        |  Bin [31m0[m -> [32m373665[m bytes
+ assets/models/zombies/player/turning right 45 degrees.fbx.import |   46 [32m+[m
+ assets/models/zombies/player/walking backwards.fbx               |  Bin [31m0[m -> [32m419665[m bytes
+ assets/models/zombies/player/walking backwards.fbx.import        |   46 [32m+[m
+ assets/models/zombies/player/walking.fbx                         |  Bin [31m0[m -> [32m371649[m bytes
+ assets/models/zombies/player/walking.fbx.import                  |   46 [32m+[m
+ assets/models/zombies/running crawl.fbx                          |  Bin [31m0[m -> [32m338017[m bytes
+ assets/models/zombies/running crawl.fbx.import                   |   46 [32m+[m
+ assets/models/zombies/zombie attack.fbx                          |  Bin [31m0[m -> [32m552497[m bytes
+ assets/models/zombies/zombie attack.fbx.import                   |   46 [32m+[m
+ assets/models/zombies/zombie biting (2).fbx                      |  Bin [31m0[m -> [32m524497[m bytes
+ assets/models/zombies/zombie biting (2).fbx.import               |   46 [32m+[m
+ assets/models/zombies/zombie biting.fbx                          |  Bin [31m0[m -> [32m879809[m bytes
+ assets/models/zombies/zombie biting.fbx.import                   |   46 [32m+[m
+ assets/models/zombies/zombie crawl.fbx                           |  Bin [31m0[m -> [32m731937[m bytes
+ assets/models/zombies/zombie crawl.fbx.import                    |   46 [32m+[m
+ assets/models/zombies/zombie death.fbx                           |  Bin [31m0[m -> [32m598833[m bytes
+ assets/models/zombies/zombie death.fbx.import                    |   46 [32m+[m
+ assets/models/zombies/zombie dying.fbx                           |  Bin [31m0[m -> [32m640417[m bytes
+ assets/models/zombies/zombie dying.fbx.import                    |   46 [32m+[m
+ assets/models/zombies/zombie idle.fbx                            |  Bin [31m0[m -> [32m542993[m bytes
+ assets/models/zombies/zombie idle.fbx.import                     |   46 [32m+[m
+ assets/models/zombies/zombie neck bite.fbx                       |  Bin [31m0[m -> [32m734913[m bytes
+ assets/models/zombies/zombie neck bite.fbx.import                |   46 [32m+[m
+ assets/models/zombies/zombie run.fbx                             |  Bin [31m0[m -> [32m327217[m bytes
+ assets/models/zombies/zombie run.fbx.import                      |   46 [32m+[m
+ assets/models/zombies/zombie scream.fbx                          |  Bin [31m0[m -> [32m579937[m bytes
+ assets/models/zombies/zombie scream.fbx.import                   |   46 [32m+[m
+ assets/models/zombies/zombie walk.fbx                            |  Bin [31m0[m -> [32m589121[m bytes
+ assets/models/zombies/zombie walk.fbx.import                     |   46 [32m+[m
+ export_presets.cfg                                               |   62 [32m+[m
+ mapa 3D/license.txt                                              |   11 [32m+[m
+ mapa 3D/scene.bin                                                |  Bin [31m0[m -> [32m134944920[m bytes
+ mapa 3D/scene.gltf                                               | 6298 [32m+++++++++++++++++++++++++++[m
+ mapa 3D/scene.gltf.import                                        |   45 [32m+[m
+ mapa 3D/textures/Model_0_baseColor.jpeg                          |  Bin [31m0[m -> [32m1442249[m bytes
+ mapa 3D/textures/Model_0_baseColor.jpeg.import                   |   40 [32m+[m
+ mapa 3D/textures/Model_10_baseColor.jpeg                         |  Bin [31m0[m -> [32m1317825[m bytes
+ mapa 3D/textures/Model_10_baseColor.jpeg.import                  |   40 [32m+[m
+ mapa 3D/textures/Model_11_baseColor.jpeg                         |  Bin [31m0[m -> [32m1365341[m bytes
+ mapa 3D/textures/Model_11_baseColor.jpeg.import                  |   40 [32m+[m
+ mapa 3D/textures/Model_12_baseColor.jpeg                         |  Bin [31m0[m -> [32m1345036[m bytes
+ mapa 3D/textures/Model_12_baseColor.jpeg.import                  |   40 [32m+[m
+ mapa 3D/textures/Model_13_baseColor.jpeg                         |  Bin [31m0[m -> [32m1446680[m bytes
+ mapa 3D/textures/Model_13_baseColor.jpeg.import                  |   40 [32m+[m
+ mapa 3D/textures/Model_14_baseColor.jpeg                         |  Bin [31m0[m -> [32m1493890[m bytes
+ mapa 3D/textures/Model_14_baseColor.jpeg.import                  |   40 [32m+[m
+ mapa 3D/textures/Model_16_baseColor.jpeg                         |  Bin [31m0[m -> [32m1359712[m bytes
+ mapa 3D/textures/Model_16_baseColor.jpeg.import                  |   40 [32m+[m
+ mapa 3D/textures/Model_17_baseColor.jpeg                         |  Bin [31m0[m -> [32m1502171[m bytes
+ mapa 3D/textures/Model_17_baseColor.jpeg.import                  |   40 [32m+[m
+ mapa 3D/textures/Model_18_baseColor.jpeg                         |  Bin [31m0[m -> [32m1485701[m bytes
+ mapa 3D/textures/Model_18_baseColor.jpeg.import                  |   40 [32m+[m
+ mapa 3D/textures/Model_19_baseColor.jpeg                         |  Bin [31m0[m -> [32m1374290[m bytes
+ mapa 3D/textures/Model_19_baseColor.jpeg.import                  |   40 [32m+[m
+ mapa 3D/textures/Model_1_baseColor.jpeg                          |  Bin [31m0[m -> [32m1296161[m bytes
+ mapa 3D/textures/Model_1_baseColor.jpeg.import                   |   40 [32m+[m
+ mapa 3D/textures/Model_20_baseColor.jpeg                         |  Bin [31m0[m -> [32m1488306[m bytes
+ mapa 3D/textures/Model_20_baseColor.jpeg.import                  |   40 [32m+[m
+ mapa 3D/textures/Model_21_baseColor.jpeg                         |  Bin [31m0[m -> [32m1349842[m bytes
+ mapa 3D/textures/Model_21_baseColor.jpeg.import                  |   40 [32m+[m
+ mapa 3D/textures/Model_22_baseColor.jpeg                         |  Bin [31m0[m -> [32m1490211[m bytes
+ mapa 3D/textures/Model_22_baseColor.jpeg.import                  |   40 [32m+[m
+ mapa 3D/textures/Model_23_baseColor.jpeg                         |  Bin [31m0[m -> [32m1488461[m bytes
+ mapa 3D/textures/Model_23_baseColor.jpeg.import                  |   40 [32m+[m
+ mapa 3D/textures/Model_24_baseColor.jpeg                         |  Bin [31m0[m -> [32m1364760[m bytes
+ mapa 3D/textures/Model_24_baseColor.jpeg.import                  |   40 [32m+[m
+ mapa 3D/textures/Model_25_baseColor.jpeg                         |  Bin [31m0[m -> [32m1489403[m bytes
+ mapa 3D/textures/Model_25_baseColor.jpeg.import                  |   40 [32m+[m
+ mapa 3D/textures/Model_26_baseColor.jpeg                         |  Bin [31m0[m -> [32m1456458[m bytes
+ mapa 3D/textures/Model_26_baseColor.jpeg.import                  |   40 [32m+[m
+ mapa 3D/textures/Model_27_baseColor.jpeg                         |  Bin [31m0[m -> [32m1415335[m bytes
+ mapa 3D/textures/Model_27_baseColor.jpeg.import                  |   40 [32m+[m
+ mapa 3D/textures/Model_28_baseColor.jpeg                         |  Bin [31m0[m -> [32m1323464[m bytes
+ mapa 3D/textures/Model_28_baseColor.jpeg.import                  |   40 [32m+[m
+ mapa 3D/textures/Model_29_baseColor.jpeg                         |  Bin [31m0[m -> [32m1247585[m bytes
+ mapa 3D/textures/Model_29_baseColor.jpeg.import                  |   40 [32m+[m
+ mapa 3D/textures/Model_2_baseColor.jpeg                          |  Bin [31m0[m -> [32m1315612[m bytes
+ mapa 3D/textures/Model_2_baseColor.jpeg.import                   |   40 [32m+[m
+ mapa 3D/textures/Model_30_baseColor.jpeg                         |  Bin [31m0[m -> [32m755802[m bytes
+ mapa 3D/textures/Model_30_baseColor.jpeg.import                  |   40 [32m+[m
+ mapa 3D/textures/Model_3_baseColor.jpeg                          |  Bin [31m0[m -> [32m1368177[m bytes
+ mapa 3D/textures/Model_3_baseColor.jpeg.import                   |   40 [32m+[m
+ mapa 3D/textures/Model_4_baseColor.jpeg                          |  Bin [31m0[m -> [32m1306055[m bytes
+ mapa 3D/textures/Model_4_baseColor.jpeg.import                   |   40 [32m+[m
+ mapa 3D/textures/Model_5_baseColor.jpeg                          |  Bin [31m0[m -> [32m1228557[m bytes
+ mapa 3D/textures/Model_5_baseColor.jpeg.import                   |   40 [32m+[m
+ mapa 3D/textures/Model_6_baseColor.jpeg                          |  Bin [31m0[m -> [32m1250677[m bytes
+ mapa 3D/textures/Model_6_baseColor.jpeg.import                   |   40 [32m+[m
+ mapa 3D/textures/Model_7_baseColor.jpeg                          |  Bin [31m0[m -> [32m1361483[m bytes
+ mapa 3D/textures/Model_7_baseColor.jpeg.import                   |   40 [32m+[m
+ mapa 3D/textures/Model_8_baseColor.jpeg                          |  Bin [31m0[m -> [32m1467662[m bytes
+ mapa 3D/textures/Model_8_baseColor.jpeg.import                   |   40 [32m+[m
+ mapa 3D/textures/Model_9_baseColor.jpeg                          |  Bin [31m0[m -> [32m1406078[m bytes
+ mapa 3D/textures/Model_9_baseColor.jpeg.import                   |   40 [32m+[m
+ scenes/levels/act_one.tscn                                       |   82 [32m+[m
+ scenes/levels/act_two.tscn                                       |  147 [32m+[m
+ scenes/main.tscn                                                 |   43 [32m+[m
+ scenes/player.tscn                                               |   40 [32m+[m
+ scenes/zombie.tscn                                               |   29 [32m+[m
+ scripts/emergency_alarm.gd                                       |   14 [32m+[m
+ scripts/emergency_alarm.gd.uid                                   |    1 [32m+[m
+ scripts/game_manager.gd                                          |   54 [32m+[m
+ scripts/game_manager.gd.uid                                      |    1 [32m+[m
+ scripts/level_controller.gd                                      |   45 [32m+[m
+ scripts/level_controller.gd.uid                                  |    1 [32m+[m
+ scripts/player_controller.gd                                     |  264 [32m++[m
+ scripts/player_controller.gd.uid                                 |    1 [32m+[m
+ scripts/zombie_ai.gd                                             |   83 [32m+[m
+ scripts/zombie_ai.gd.uid                                         |    1 [32m+[m
+ 254 files changed, 12346 insertions(+), 1 deletion(-)
