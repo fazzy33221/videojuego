@@ -23,7 +23,11 @@ Abre `project.godot` con Godot 4 e inicia la escena principal. Godot importara l
 - `Modelos 3d/` y `mapa 3D/`: recursos originales conservados
 - `Player/ModelPivot/CharacterModel` en `scenes/player.tscn`: modelo principal X Bot
 
-Reforma usa iluminacion ambiental azul y luz direccional calida. Seis zombies aparecen alrededor del Angel. El mapa GLTF de Reforma se instancia en el origen con rotacion `(0, 0, 0)`, escala uniforme 100 y un desplazamiento local de `-0.1` en Y para apoyar la geometria en el nivel; sus mallas reciben colision estatica al cargar el acto. El jugador aparece 0.05 unidades sobre el marcador de inicio. Los niveles hornean una malla de navegacion desde los nodos del grupo `navigation_mesh_source_group`; para integrar geometria nueva, agregala a ese grupo. La camara sigue suavemente desde un pivote independiente del giro del personaje, y al estar quieto el modelo vuelve a su pose de reposo sin reutilizar un fotograma de caminata como postura de arma.
+Reforma instancia el mapa GLTF original con escala uniforme 100 y posicion local `(0, -10, 0)` para compensar la altura del origen importado. El modelo mide aproximadamente 506 x 88 x 368 m despues de importarse y escalarse; la escena conserva sus proporciones y geometria. La prueba independiente `scenes/levels/reforma_map_test.tscn` contiene la reticula urbana procedural de 5 x 5 manzanas. El nivel principal usa iluminacion ambiental neutral, genera una colision estatica agrupada para el mapa y hornea la navegacion de forma asincrona. Los zombies esperan a que NavigationServer sincronice la malla y se alinean con el suelo fisico antes de perseguir. El jugador aparece en el marcador sobre la superficie medida del modelo; la camara conserva su far clip predeterminado de 4000 m. Los niveles hornean una malla de navegacion desde los nodos del grupo `navigation_mesh_source_group`; para integrar geometria nueva, agregala a ese grupo. La camara sigue suavemente desde un pivote independiente del giro del personaje, y al estar quieto el modelo vuelve a su pose de reposo sin reutilizar un fotograma de caminata como postura de arma.
+
+### Probar el mapa de Reforma
+
+Abre `scenes/levels/reforma_map_test.tscn` y ejecuta **Run Current Scene (F6)** para recorrer el mapa nuevo sin zombies ni cambiar la escena principal del juego. Usa WASD para moverte, Shift para correr, el raton para mirar y Escape para liberar el cursor.
 
 ## Compilacion Android
 

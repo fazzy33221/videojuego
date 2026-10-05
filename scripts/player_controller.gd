@@ -128,6 +128,7 @@ func _process(delta: float) -> void:
 
 
 func _setup_character_rig() -> void:
+	model_pivot.rotation.y = PI
 	character_animator = character_model.find_child("AnimationPlayer", true, false) as AnimationPlayer
 	if character_animator == null:
 		character_animator = AnimationPlayer.new()

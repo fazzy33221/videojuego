@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/reforma_environment.gd" id="1_map"]
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="2_player"]
+
+[sub_resource type="Environment" id="TestEnvironment"]
+background_mode = 1
+background_color = Color(0.055, 0.071, 0.105, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.32, 0.38, 0.52, 1)
+ambient_light_energy = 0.7
+ambient_light_sky_contribution = 0.0
+
+[node name="ReformaMapTest" type="Node3D"]
+
+[node name="MapGeometry" type="Node3D" parent="."]
+script = ExtResource("1_map")
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector3(0, 0.05, 85)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("TestEnvironment")
+
+[node name="Daylight" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-52, -28, 0)
+light_color = Color(1, 0.68, 0.42, 1)
+light_energy = 1.35
+shadow_enabled = true
+
+[node name="TestInstructions" type="CanvasLayer" parent="."]
+
+[node name="Instructions" type="Label" parent="TestInstructions"]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 1040.0
+offset_bottom = 78.0
+theme_override_colors/font_color = Color(0.96, 0.91, 0.77, 1)
+theme_override_font_sizes/font_size = 20
+text = "PRUEBA DEL MAPA | WASD mover · Shift correr · Raton mirar · Escape liberar cursor"

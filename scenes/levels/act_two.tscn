@@ -37,19 +37,19 @@ roughness = 0.34
 agent_height = 1.8
 agent_radius = 0.45
 agent_max_climb = 0.3
-cell_size = 0.25
+cell_size = 0.5
 cell_height = 0.25
-geometry_parsed_geometry_type = 2
+geometry_parsed_geometry_type = 1
 geometry_source_geometry_mode = 1
 geometry_source_group_name = "navigation_mesh_source_group"
 filter_ledge_spans = true
 
 [sub_resource type="Environment" id="UrbanEnvironment"]
 background_mode = 1
-background_color = Color(0.055, 0.071, 0.105, 1)
+background_color = Color(0.14, 0.15, 0.16, 1)
 ambient_light_source = 2
-ambient_light_color = Color(0.32, 0.38, 0.52, 1)
-ambient_light_energy = 0.7
+ambient_light_color = Color(0.72, 0.72, 0.68, 1)
+ambient_light_energy = 1.0
 ambient_light_sky_contribution = 0.0
 
 [node name="ActTwoReforma" type="Node3D"]
@@ -58,12 +58,12 @@ act_title = "PASEO DE LA REFORMA  |  BUSCA LA EVACUACION"
 act_hint = "Rodea el Angel y encuentra la ruta de evacuacion al norte"
 
 [node name="ReformaEnvironment" type="Node3D" parent="." groups=["navigation_mesh_source_group"]]
-position = Vector3(0, 0, 0)
+position = Vector3(0, -10, 0)
 rotation_degrees = Vector3(0, 0, 0)
 scale = Vector3(100, 100, 100)
 
 [node name="MapGeometry" parent="ReformaEnvironment" instance=ExtResource("2_reforma")]
-position = Vector3(0, -0.1, 0)
+position = Vector3(0, 0, 0)
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
 navigation_mesh = SubResource("LevelNavigationMesh")
@@ -72,12 +72,12 @@ navigation_mesh = SubResource("LevelNavigationMesh")
 environment = SubResource("UrbanEnvironment")
 
 [node name="PlayerSpawn" type="Marker3D" parent="."]
-position = Vector3(0, 0, -8)
+position = Vector3(0, 5.25, -8)
 
 [node name="Daylight" type="DirectionalLight3D" parent="."]
 rotation_degrees = Vector3(-52, -28, 0)
-light_color = Color(1, 0.68, 0.42, 1)
-light_energy = 1.35
+light_color = Color(1, 0.96, 0.88, 1)
+light_energy = 1.45
 shadow_enabled = true
 
 [node name="TaxiNorth" parent="." groups=["navigation_mesh_source_group"] instance=ExtResource("3_taxi")]
