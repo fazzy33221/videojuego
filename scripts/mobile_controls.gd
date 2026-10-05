@@ -73,7 +73,7 @@ func _end_touch(index: int) -> void:
 
 func _update_movement(position: Vector2) -> void:
 	var offset := position - _joystick_center()
-	_movement = (offset / _joystick_radius()).limit_length()
+	_movement = Vector2(offset.x, -offset.y).limit_length() / _joystick_radius()
 	movement_changed.emit(_movement)
 	queue_redraw()
 
