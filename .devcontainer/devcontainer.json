@@ -1,0 +1,13 @@
+{
+  "name": "CDMX: Zona Cero (Godot 4.7.2)",
+  "image": "barichello/godot-ci:4.7.2",
+  "remoteUser": "root",
+  "postCreateCommand": "godot --headless --editor --path . --quit",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "geequlim.godot-tools"
+      ]
+    }
+  }
+}

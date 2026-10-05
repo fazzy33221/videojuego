@@ -6,6 +6,12 @@ Base jugable en Godot 4 para una aventura de supervivencia en dos actos. La part
 
 Abre `project.godot` con Godot 4 e inicia la escena principal. Godot importara los recursos 3D la primera vez.
 
+### Entorno de desarrollo en Codespaces
+
+El proyecto no necesita un entorno virtual de Python. Para trabajar con una version reproducible de Godot, abre el repositorio en GitHub Codespaces y selecciona **Reopen in Container**. El contenedor usa Godot 4.7.2, la misma version que la compilacion de Android, e importa los recursos al crearse.
+
+Puedes comprobar la version con `godot --version` y validar la escena principal en modo sin interfaz con `godot --headless --path . --quit-after 1`. Para usar el editor grafico, instala Godot 4.7.2 en tu equipo y abre `project.godot`.
+
 ## Controles
 
 - WASD o flechas: movimiento
