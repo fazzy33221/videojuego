@@ -12,7 +12,7 @@ func _ready() -> void:
 
 
 func _create_map_collisions() -> void:
-	var map_root := get_node_or_null("ReformaEnvironment/MapGeometry") as Node3D
+	var map_root := get_node_or_null("MetroEnvironment/MapGeometry") as Node3D
 	if map_root == null:
 		return
 	if map_root.has_node("GeneratedMapCollision"):
