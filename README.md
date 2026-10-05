@@ -14,12 +14,18 @@ Puedes comprobar la version con `godot --version` y validar la escena principal 
 
 ## Controles
 
+En PC:
 - WASD o flechas: movimiento
 - Raton: camara
 - Shift: correr
 - Espacio: saltar
 - F: encender/apagar linterna
 - Escape: liberar el cursor
+
+En Android:
+- Joystick de la izquierda: movimiento
+- Arrastrar en la mitad derecha: mover la camara
+- Botones de la derecha: correr, saltar y encender/apagar la linterna
 
 ## Estructura
 
