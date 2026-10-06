@@ -331,19 +331,39 @@ func _perform_melee_attack() -> void:
 		return
 	melee_cooldown = 0.55
 
-	var origin := camera_pivot.global_position
-	var forward := -camera_pivot.global_transform.basis.z.normalized()
-	var query := PhysicsRayQueryParameters3D.create(
-		origin,
-		origin + forward * melee_range,
-		2
-	)
-	var hit := get_world_3d().direct_space_state.intersect_ray(query)
-	if hit.is_empty():
-		return
-	var target := hit.get("collider") as Node
-	if target != null and target.is_in_group("zombies") and target.has_method("take_damage"):
-		target.take_damage(melee_damage)
+	# Use a forgiving fist-sized hit volume in front of the player. A single
+	# camera ray was too precise for touch aiming and often passed beside a zombie.
+	var forward := -camera_pivot.global_transform.basis.z
+	forward.y = 0.0
+	forward = forward.normalized()
+	var attack_center := global_position + Vector3.UP * 0.95 + forward * 1.1
+	var attack_shape := SphereShape3D.new()
+	attack_shape.radius = 1.35
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = attack_shape
+	query.transform = Transform3D(Basis.IDENTITY, attack_center)
+	query.collision_mask = 2
+	query.collide_with_bodies = true
+	query.collide_with_areas = false
+
+	var candidates := get_world_3d().direct_space_state.intersect_shape(query, 32)
+	var closest_target: Node3D
+	var closest_distance := melee_range
+	for candidate in candidates:
+		var target := candidate.get("collider") as Node3D
+		if target == null or not target.is_in_group("zombies") or not target.has_method("take_damage"):
+			continue
+		var offset := target.global_position - global_position
+		offset.y = 0.0
+		var distance := offset.length()
+		if distance > melee_range or forward.dot(offset.normalized()) < 0.15:
+			continue
+		if distance < closest_distance:
+			closest_distance = distance
+			closest_target = target
+
+	if is_instance_valid(closest_target):
+		closest_target.take_damage(melee_damage)
 
 
 func take_damage(amount: float) -> void:
