@@ -1,6 +1,6 @@
 # CDMX: Zona Cero
 
-Base jugable en Godot 4 para una aventura de supervivencia en dos actos. El segundo acto usa temporalmente el modelo de la estacion Ex Hacienda de Enmedio; el mapa de Reforma queda fuera del nivel mientras se elige otro entorno.
+Aventura de supervivencia en Godot 4 para Android y PC. La partida nueva comienza en una ciudad ficticia de 300 x 300 metros, organizada alrededor de una avenida principal y una cuadrícula de calles secundarias. Incluye el Centro Antiguo, la Colonia del Lago, el Barrio del Mercado, la Zona Industrial y el Parque del Mirador. El diseño prioriza rutas transitables, cruces legibles, landmarks y colisiones ligeras para móvil.
 
 ## Ejecutar
 
@@ -35,11 +35,13 @@ En Android:
 - `Modelos 3d/` y `mapa 3D/`: recursos originales conservados
 - `Player/ModelPivot/CharacterModel` en `scenes/player.tscn`: modelo principal X Bot
 
-El nivel principal instancia `Modelos 3d/v1_metro_ex_hacienda_de_enmedio.glb` temporalmente a escala original. El controlador genera colisiones estaticas para la geometria del mapa y hornea la navegacion de forma asincrona. Los nodos del mapa se agregan al grupo `navigation_mesh_source_group` para construir la malla de navegacion. El jugador aparece encima del centro del modelo y cae hasta la superficie. La escena `scenes/levels/reforma_map_test.tscn` se conserva como prueba independiente del mapa urbano anterior.
+El nivel principal utiliza `scripts/reforma_environment.gd` para crear calles, manzanas y zonas urbanas. La escena incluye un piso de respaldo y el jugador vuelve a su punto de aparición si cae fuera del mapa. `scenes/levels/act_one.tscn` conserva el escenario antiguo del metro, pero Nueva partida carga la ciudad. `scenes/levels/reforma_map_test.tscn` sirve para probar el trazado urbano por separado.
 
-### Probar el mapa de Reforma
+### Diseño de la ciudad
 
-Abre `scenes/levels/reforma_map_test.tscn` y ejecuta **Run Current Scene (F6)** para recorrer el mapa nuevo sin zombies ni cambiar la escena principal del juego. Usa WASD para moverte, Shift para correr, el raton para mirar y Escape para liberar el cursor.
+La avenida norte-sur conecta la zona comercial del sur con el Centro Antiguo. Calles transversales forman barrios de escala peatonal; los callejones y patios entre edificios dan rutas secundarias. La ciudad distingue las zonas mediante alturas, paletas y espacios abiertos. Entre sus referencias están la torre del centro, la escuela, el mercado con gasolinera, las bodegas y el parque con cancha. Los edificios usan colisiones de caja y el detalle se mantiene acotado para Android.
+
+La escena `scenes/levels/reforma_map_test.tscn` permite recorrer el blockout urbano de forma independiente con **Run Current Scene (F6)**.
 
 ## Compilacion Android
 
