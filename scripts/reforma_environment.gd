@@ -264,23 +264,34 @@ func _create_block(x_interval: Vector2, z_interval: Vector2, block_index: int) -
 			building_width = minf(building_width, 10.0)
 			var building_side := -1.0 if parcel_index % 2 == 0 else 1.0
 			parcel_offset.x = building_side * (AVENUE_WIDTH * 0.5 + building_width * 0.5)
-		if district == DISTRICT_CENTRO and parcel_index == 3:
+		var building_depth := parcel_depth
+		if district == DISTRICT_RESIDENTIAL:
+			building_width *= [0.72, 0.84, 0.96][parcel_index % 3]
+			building_depth *= [0.76, 0.88, 1.0][parcel_index % 3]
+		var landmark_tower := (
+			district == DISTRICT_CENTRO
+			and absf(center_x) < 1.0
+			and absf(center_z) < 1.0
+			and parcel_index == 3
+		)
+		if landmark_tower:
 			height = 52.0
 			building_width = 11.0
+			building_depth = 14.0
 			parcel_offset = Vector2(AVENUE_WIDTH * 0.5 + building_width * 0.5, 0.0)
 		var facade := _create_facade_material(palette[parcel_index % palette.size()])
 		_add_building(
 			block_root,
 			"Building%02d_%d" % [block_index, parcel_index + 1],
 			Vector3(parcel_offset.x, height * 0.5, parcel_offset.y),
-			Vector3(building_width, height, parcel_depth),
+			Vector3(building_width, height, building_depth),
 			facade,
-			district == DISTRICT_CENTRO and parcel_index == 3
+			landmark_tower
 		)
 
 
 func _district_for(x: float, z: float) -> String:
-	if absf(x) < 30.0 and absf(z) < 30.0:
+	if absf(x) < 70.0 and absf(z) < 70.0:
 		return DISTRICT_CENTRO
 	if x < -60.0 and z > 60.0:
 		return DISTRICT_INDUSTRIAL
@@ -355,6 +366,14 @@ func _build_landmark_block(
 		_add_landmark_box(block_root, "ParkFountain", Vector3(0, 0.45, 0), Vector3(4, 0.9, 4), Color(0.64, 0.72, 0.73))
 		for tree_index in range(8):
 			var tree := MeshInstance3D.new()
+			var trunk := MeshInstance3D.new()
+			var trunk_mesh := CylinderMesh.new()
+			trunk_mesh.top_radius = 0.22
+			trunk_mesh.bottom_radius = 0.32
+			trunk_mesh.height = 2.4
+			trunk.mesh = trunk_mesh
+			trunk.material_override = _create_facade_material(Color(0.30, 0.20, 0.13))
+			trunk.position = Vector3(-18 + (tree_index % 4) * 12, 1.2, -18 + int(tree_index / 4) * 36)
 			var canopy := SphereMesh.new()
 			canopy.radius = 2.0
 			canopy.height = 3.8
@@ -369,6 +388,7 @@ func _build_landmark_block(
 				tree_container.collision_layer = 0
 				tree_container.collision_mask = 0
 				block_root.add_child(tree_container)
+			tree_container.add_child(trunk)
 			tree_container.add_child(tree)
 		_add_landmark_label(block_root, "PARQUE DEL MIRADOR", Vector3(0, 8, -20), Color(0.8, 1.0, 0.75))
 		return true
