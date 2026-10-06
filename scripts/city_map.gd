@@ -35,12 +35,12 @@ func _ready() -> void:
 
 
 func _create_materials() -> void:
-	asphalt = _make_material(Color(0.105, 0.12, 0.14), 0.95)
-	concrete = _make_material(Color(0.39, 0.41, 0.42), 0.9)
+	asphalt = _make_material(Color(0.19, 0.21, 0.23), 0.95)
+	concrete = _make_material(Color(0.54, 0.56, 0.54), 0.9)
 	road_line = _make_material(Color(0.87, 0.77, 0.48), 0.72, Color(0.18, 0.11, 0.025))
 	glass = _make_material(Color(0.11, 0.23, 0.29), 0.26)
-	metal = _make_material(Color(0.16, 0.18, 0.19), 0.48)
-	foliage = _make_material(Color(0.13, 0.28, 0.19), 0.92)
+	metal = _make_material(Color(0.25, 0.27, 0.28), 0.48)
+	foliage = _make_material(Color(0.19, 0.38, 0.25), 0.92)
 	bark = _make_material(Color(0.23, 0.16, 0.11), 0.95)
 	lamp_glow = _make_material(Color(1.0, 0.76, 0.38), 0.3, Color(1.0, 0.46, 0.1))
 	var store_material := _make_material(Color(0.42, 0.25, 0.16), 0.82)

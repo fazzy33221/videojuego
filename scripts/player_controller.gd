@@ -39,6 +39,11 @@ var mobile_jump_requested: bool = false
 var mobile_attack_requested: bool = false
 var melee_cooldown: float = 0.0
 var selected_weapon_id: StringName = &"fists"
+var safe_spawn_position: Vector3 = Vector3.ZERO
+
+
+func set_safe_spawn_position(value: Vector3) -> void:
+	safe_spawn_position = value
 
 
 func set_mobile_movement_input(value: Vector2) -> void:
@@ -272,6 +277,11 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if global_position.y < -8.0:
+		global_position = safe_spawn_position
+		velocity = Vector3.ZERO
+		camera_pivot.global_position = safe_spawn_position + Vector3.UP * 1.5
+
 	melee_cooldown = maxf(melee_cooldown - delta, 0.0)
 	if mobile_attack_requested or Input.is_action_just_pressed(&"attack"):
 		_perform_melee_attack()
@@ -312,6 +322,8 @@ func _physics_process(delta: float) -> void:
 	_play_character_animation(animation_state)
 
 	move_and_slide()
+	if is_on_floor():
+		safe_spawn_position = global_position
 
 
 func _perform_melee_attack() -> void:

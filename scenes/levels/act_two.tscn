@@ -1,8 +1,18 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://scripts/level_controller.gd" id="1_level"]
 [ext_resource type="Script" path="res://scripts/city_map.gd" id="2_city"]
 [ext_resource type="PackedScene" path="res://scenes/zombie.tscn" id="3_zombie"]
+
+[sub_resource type="BoxShape3D" id="CityFloorShape"]
+size = Vector3(128, 0.6, 128)
+
+[sub_resource type="BoxMesh" id="CityFloorMesh"]
+size = Vector3(128, 0.6, 128)
+
+[sub_resource type="StandardMaterial3D" id="CityFloorMaterial"]
+albedo_color = Color(0.28, 0.31, 0.30, 1)
+roughness = 0.95
 
 [sub_resource type="BoxShape3D" id="ExitShape"]
 size = Vector3(14, 3, 8)
@@ -22,8 +32,8 @@ filter_ledge_spans = true
 background_mode = 1
 background_color = Color(0.08, 0.09, 0.11, 1)
 ambient_light_source = 2
-ambient_light_color = Color(0.82, 0.86, 0.92, 1)
-ambient_light_energy = 0.8
+ambient_light_color = Color(0.92, 0.95, 1, 1)
+ambient_light_energy = 1.35
 ambient_light_sky_contribution = 0.0
 
 [node name="ActTwoCity" type="Node3D"]
@@ -42,14 +52,26 @@ navigation_mesh = SubResource("LevelNavigationMesh")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("MetroEnvironment")
 
+[node name="SafetyGround" type="StaticBody3D" parent="."]
+position = Vector3(0, -0.42, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SafetyGround"]
+shape = SubResource("CityFloorShape")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SafetyGround"]
+mesh = SubResource("CityFloorMesh")
+surface_material_override/0 = SubResource("CityFloorMaterial")
+
 [node name="PlayerSpawn" type="Marker3D" parent="."]
 position = Vector3(0, 0.05, 24)
 
 [node name="Daylight" type="DirectionalLight3D" parent="."]
 rotation_degrees = Vector3(-52, -28, 0)
 light_color = Color(0.8, 0.86, 1, 1)
-light_energy = 0.7
-shadow_enabled = true
+light_energy = 1.35
+shadow_enabled = false
 
 [node name="ZombieA" parent="." instance=ExtResource("3_zombie")]
 position = Vector3(10, 0, -12)

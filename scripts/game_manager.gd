@@ -279,6 +279,7 @@ func _start_level(level_scene: PackedScene) -> void:
 	else:
 		player.global_position = Vector3(0.0, 0.05, 0.0)
 	player.velocity = Vector3.ZERO
+	player.set_safe_spawn_position(player.global_position)
 	player.health = 100.0
 	update_health(player.health)
 	objective_label.text = str(active_level.get("act_title"))
