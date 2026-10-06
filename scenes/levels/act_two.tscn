@@ -1,11 +1,11 @@
 [gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/level_controller.gd" id="1_level"]
-[ext_resource type="PackedScene" path="res://Modelos 3d/v1_metro_ex_hacienda_de_enmedio.glb" id="2_metro"]
+[ext_resource type="Script" path="res://scripts/city_map.gd" id="2_city"]
 [ext_resource type="PackedScene" path="res://scenes/zombie.tscn" id="3_zombie"]
 
 [sub_resource type="BoxShape3D" id="ExitShape"]
-size = Vector3(7, 3, 3)
+size = Vector3(14, 3, 8)
 
 [sub_resource type="NavigationMesh" id="LevelNavigationMesh"]
 agent_height = 1.8
@@ -26,14 +26,15 @@ ambient_light_color = Color(0.82, 0.86, 0.92, 1)
 ambient_light_energy = 0.8
 ambient_light_sky_contribution = 0.0
 
-[node name="ActTwoMetro" type="Node3D"]
+[node name="ActTwoCity" type="Node3D"]
 script = ExtResource("1_level")
-act_title = "ESTACION DEL METRO  |  BUSCA LA SALIDA"
-act_hint = "Encuentra la salida de la estacion y evita a los infectados"
+act_title = "CIUDAD INFECTADA  |  BUSCA LA SALIDA"
+act_hint = "Cruza las calles de la ciudad y evita a los infectados"
 
-[node name="MetroEnvironment" type="Node3D" parent="." groups=["navigation_mesh_source_group"]]
+[node name="CityEnvironment" type="Node3D" parent="." groups=["navigation_mesh_source_group"]]
 
-[node name="MapGeometry" parent="MetroEnvironment" instance=ExtResource("2_metro")]
+[node name="MapGeometry" type="Node3D" parent="CityEnvironment"]
+script = ExtResource("2_city")
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
 navigation_mesh = SubResource("LevelNavigationMesh")
@@ -42,7 +43,7 @@ navigation_mesh = SubResource("LevelNavigationMesh")
 environment = SubResource("MetroEnvironment")
 
 [node name="PlayerSpawn" type="Marker3D" parent="."]
-position = Vector3(0, 25, 0)
+position = Vector3(0, 0.05, 24)
 
 [node name="Daylight" type="DirectionalLight3D" parent="."]
 rotation_degrees = Vector3(-52, -28, 0)
@@ -67,7 +68,7 @@ position = Vector3(-10, 0, 12)
 detection_range = 40.0
 
 [node name="ExitTrigger" type="Area3D" parent="."]
-position = Vector3(0, 1.5, -40)
+position = Vector3(0, 1.5, -59)
 collision_layer = 0
 collision_mask = 1
 
