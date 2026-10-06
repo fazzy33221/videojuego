@@ -25,9 +25,12 @@ func _ready() -> void:
 	mobile_controls.connect("jump_requested", Callable(player, "request_mobile_jump"))
 	mobile_controls.connect("sprint_changed", Callable(player, "set_mobile_sprint_pressed"))
 	mobile_controls.connect("flashlight_requested", Callable(player, "toggle_flashlight"))
+	mobile_controls.connect("attack_requested", Callable(player, "request_mobile_attack"))
 	start_menu.connect("new_game_requested", Callable(self, "_start_new_game"))
 	start_menu.connect("continue_requested", Callable(self, "_continue_game"))
 	start_menu.connect("options_changed", Callable(self, "_apply_settings"))
+	start_menu.connect("weapon_selected", Callable(player, "select_weapon"))
+	player.select_weapon(start_menu.selected_weapon_id)
 	player.mouse_sensitivity = start_menu.camera_sensitivity
 	player.visible = false
 	player.set_physics_process(false)

@@ -38,4 +38,4 @@ light_color = Color(0.86, 0.91, 1, 1)
 light_energy = 3.2
 shadow_enabled = true
 spot_range = 28.0
-spot_angle = 32.0
+spot_angle = 44.0

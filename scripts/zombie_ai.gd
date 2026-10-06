@@ -1,5 +1,6 @@
 extends CharacterBody3D
 
+@export var health: float = 100.0
 @export var move_speed: float = 2.2
 @export var detection_range: float = 28.0
 @export var attack_range: float = 1.6
@@ -19,6 +20,7 @@ var navigation_ready: bool = false
 
 
 func _ready() -> void:
+	add_to_group("zombies")
 	set_physics_process(false)
 	navigation_agent.velocity_computed.connect(_on_velocity_computed)
 	var animation_node := visual.find_child("AnimationPlayer", true, false) as AnimationPlayer
@@ -28,6 +30,13 @@ func _ready() -> void:
 				animation_node.play(animation_name)
 				break
 	_wait_for_navigation()
+
+
+func take_damage(amount: float) -> void:
+	health = maxf(health - amount, 0.0)
+	if health <= 0.0:
+		set_physics_process(false)
+		queue_free()
 
 
 func _wait_for_navigation() -> void:

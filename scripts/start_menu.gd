@@ -3,6 +3,7 @@ extends Control
 signal new_game_requested
 signal continue_requested
 signal options_changed(master_volume: float, camera_sensitivity: float)
+signal weapon_selected(weapon_id: StringName)
 
 const SETTINGS_PATH := "user://settings.cfg"
 
@@ -11,10 +12,12 @@ const SETTINGS_PATH := "user://settings.cfg"
 var _continue_button: Button
 var _controls_page: Control
 var _options_page: Control
+var _weapons_page: Control
 var _volume_slider: HSlider
 var _sensitivity_slider: HSlider
 var master_volume_percent: float = 80.0
 var camera_sensitivity: float = 0.0025
+var selected_weapon_id: StringName = &"fists"
 
 
 func _ready() -> void:
@@ -23,6 +26,7 @@ func _ready() -> void:
 	_add_menu_actions()
 	_build_controls_page()
 	_build_options_page()
+	_build_weapons_page()
 	_apply_settings()
 	set_continue_available(FileAccess.file_exists("user://continue.cfg"))
 
@@ -41,6 +45,10 @@ func _add_menu_actions() -> void:
 	var options_button := _create_button("OptionsButton", "OPCIONES")
 	options_button.pressed.connect(_show_options_page)
 	menu_content.add_child(options_button)
+
+	var weapons_button := _create_button("WeaponsButton", "ARMAS Y EQUIPO")
+	weapons_button.pressed.connect(_show_weapons_page)
+	menu_content.add_child(weapons_button)
 
 	var controls_button := _create_button("ControlsButton", "CONTROLES")
 	controls_button.pressed.connect(_show_controls_page)
@@ -98,6 +106,36 @@ func _build_options_page() -> void:
 	content.add_child(back_button)
 	add_child(_options_page)
 
+func _build_weapons_page() -> void:
+	_weapons_page = _create_page("WeaponsPage")
+	var content := _create_page_content(_weapons_page)
+	content.add_child(_create_heading("ARMAS Y EQUIPO"))
+
+	var description := Label.new()
+	description.custom_minimum_size = Vector2(380, 120)
+	description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	description.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	description.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	description.add_theme_color_override("font_color", Color(0.84, 0.88, 0.86, 1))
+	description.add_theme_font_size_override("font_size", 18)
+	description.text = "Por ahora solo están disponibles los puños.\nLa linterna va contigo; actívala con LUZ para iluminar un círculo delante de ti.\nLas armas de fuego estarán disponibles más adelante."
+	content.add_child(description)
+
+	var fists_button := _create_button("FistsButton", "PUÑOS · EQUIPAR")
+	fists_button.pressed.connect(_select_fists)
+	content.add_child(fists_button)
+
+	var back_button := _create_button("WeaponsBackButton", "VOLVER")
+	back_button.pressed.connect(_show_main_page)
+	content.add_child(back_button)
+	add_child(_weapons_page)
+
+
+func _select_fists() -> void:
+	selected_weapon_id = &"fists"
+	_save_settings()
+	weapon_selected.emit(selected_weapon_id)
+	_show_weapons_page()
 
 func _create_page(page_name: String) -> Control:
 	var page := Control.new()
@@ -151,12 +189,16 @@ func _load_settings() -> void:
 		return
 	master_volume_percent = float(settings.get_value("audio", "master_volume", 80.0))
 	camera_sensitivity = float(settings.get_value("camera", "sensitivity", 0.0025))
+	selected_weapon_id = StringName(str(settings.get_value("weapons", "equipped", "fists")))
+	if selected_weapon_id != &"fists":
+		selected_weapon_id = &"fists"
 
 
 func _save_settings() -> void:
 	var settings := ConfigFile.new()
 	settings.set_value("audio", "master_volume", master_volume_percent)
 	settings.set_value("camera", "sensitivity", camera_sensitivity)
+	settings.set_value("weapons", "equipped", String(selected_weapon_id))
 	settings.save(SETTINGS_PATH)
 
 
@@ -180,21 +222,34 @@ func _on_sensitivity_changed(value: float) -> void:
 	_apply_settings()
 
 
+	# Only fists are implemented at this stage; reject unknown saved choices.
+
+
+func _show_weapons_page() -> void:
+	menu_content.hide()
+	_controls_page.hide()
+	_options_page.hide()
+	_weapons_page.show()
+
+
 func _show_controls_page() -> void:
 	menu_content.hide()
 	_options_page.hide()
+	_weapons_page.hide()
 	_controls_page.show()
 
 
 func _show_options_page() -> void:
 	menu_content.hide()
 	_controls_page.hide()
+	_weapons_page.hide()
 	_options_page.show()
 
 
 func _show_main_page() -> void:
 	_controls_page.hide()
 	_options_page.hide()
+	_weapons_page.hide()
 	menu_content.show()
 
 

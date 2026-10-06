@@ -17,6 +17,8 @@ const ANIMATION_CLIPS: Dictionary = {
 @export var mouse_sensitivity: float = 0.0025
 @export var camera_follow_speed: float = 12.0
 @export var health: float = 100.0
+@export var melee_damage: float = 35.0
+@export var melee_range: float = 2.2
 @export_node_path("Node3D") var weapon_node_path: NodePath
 
 @onready var camera_pivot: Node3D = $CameraPivot
@@ -34,6 +36,9 @@ var weapon_collision_defaults: Dictionary = {}
 var mobile_movement_input: Vector2 = Vector2.ZERO
 var mobile_sprint_pressed: bool = false
 var mobile_jump_requested: bool = false
+var mobile_attack_requested: bool = false
+var melee_cooldown: float = 0.0
+var selected_weapon_id: StringName = &"fists"
 
 
 func set_mobile_movement_input(value: Vector2) -> void:
@@ -46,6 +51,16 @@ func set_mobile_sprint_pressed(pressed: bool) -> void:
 
 func request_mobile_jump() -> void:
 	mobile_jump_requested = true
+
+
+func request_mobile_attack() -> void:
+	mobile_attack_requested = true
+
+
+func select_weapon(weapon_id: StringName) -> void:
+	# Fists are the only available weapon until firearms are implemented.
+	selected_weapon_id = &"fists" if weapon_id != &"fists" else weapon_id
+	unequip_weapon()
 
 
 func apply_mobile_look(delta: Vector2) -> void:
@@ -69,6 +84,7 @@ func _ready() -> void:
 		else:
 			_cache_weapon_node_defaults()
 	set_weapon_equipped(false)
+	flashlight.visible = false
 	add_to_group("player")
 	_configure_movement_actions()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -137,6 +153,11 @@ func _configure_movement_actions() -> void:
 	_register_action(&"move_right", [KEY_D, KEY_RIGHT])
 	_register_action(&"move_forward", [KEY_W, KEY_UP])
 	_register_action(&"move_backward", [KEY_S, KEY_DOWN])
+	if not InputMap.has_action(&"attack"):
+		InputMap.add_action(&"attack")
+		var attack_event := InputEventMouseButton.new()
+		attack_event.button_index = MOUSE_BUTTON_LEFT
+		InputMap.action_add_event(&"attack", attack_event)
 
 
 func _register_action(action_name: StringName, physical_keys: Array) -> void:
@@ -251,6 +272,11 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	melee_cooldown = maxf(melee_cooldown - delta, 0.0)
+	if mobile_attack_requested or Input.is_action_just_pressed(&"attack"):
+		_perform_melee_attack()
+	mobile_attack_requested = false
+
 	var keyboard_input := Vector2(
 		Input.get_axis(&"move_left", &"move_right"),
 		Input.get_axis(&"move_backward", &"move_forward")
@@ -286,6 +312,26 @@ func _physics_process(delta: float) -> void:
 	_play_character_animation(animation_state)
 
 	move_and_slide()
+
+
+func _perform_melee_attack() -> void:
+	if melee_cooldown > 0.0 or selected_weapon_id != &"fists":
+		return
+	melee_cooldown = 0.55
+
+	var origin := camera_pivot.global_position
+	var forward := -camera_pivot.global_transform.basis.z.normalized()
+	var query := PhysicsRayQueryParameters3D.create(
+		origin,
+		origin + forward * melee_range,
+		2
+	)
+	var hit := get_world_3d().direct_space_state.intersect_ray(query)
+	if hit.is_empty():
+		return
+	var target := hit.get("collider") as Node
+	if target != null and target.is_in_group("zombies") and target.has_method("take_damage"):
+		target.take_damage(melee_damage)
 
 
 func take_damage(amount: float) -> void:

@@ -5,6 +5,7 @@ signal look_changed(delta: Vector2)
 signal jump_requested
 signal sprint_changed(pressed: bool)
 signal flashlight_requested
+signal attack_requested
 
 var _joystick_touch := -1
 var _look_touch := -1
@@ -47,6 +48,8 @@ func _begin_touch(index: int, position: Vector2) -> void:
 	if _joystick_touch == -1 and _inside_circle(position, _joystick_center(), _joystick_radius() * 1.35):
 		_joystick_touch = index
 		_update_movement(position)
+	elif _inside_circle(position, _attack_center(), _button_radius()):
+		attack_requested.emit()
 	elif _inside_circle(position, _jump_center(), _button_radius()):
 		jump_requested.emit()
 	elif _sprint_touch == -1 and _inside_circle(position, _sprint_center(), _button_radius()):
@@ -94,6 +97,10 @@ func _button_radius() -> float:
 	return clampf(size.y * 0.075, 34.0, 56.0)
 
 
+func _attack_center() -> Vector2:
+	return Vector2(size.x * 0.73, size.y * 0.65)
+
+
 func _jump_center() -> Vector2:
 	return Vector2(size.x * 0.87, size.y * 0.65)
 
@@ -116,6 +123,7 @@ func _draw() -> void:
 	draw_arc(_joystick_center(), radius, 0.0, TAU, 48, Color(0.85, 0.88, 0.90, 0.72), 3.0)
 	draw_circle(_joystick_center() + knob_offset, radius * 0.34, Color(0.85, 0.88, 0.90, 0.68))
 
+	_draw_button(_attack_center(), "GOLPE")
 	_draw_button(_jump_center(), "SALTAR")
 	_draw_button(_sprint_center(), "CORRER")
 	_draw_button(_flashlight_center(), "LUZ")
