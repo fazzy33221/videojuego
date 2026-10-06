@@ -11,6 +11,9 @@ var _joystick_touch := -1
 var _look_touch := -1
 var _sprint_touch := -1
 var _movement := Vector2.ZERO
+var _joystick_origin := Vector2.ZERO
+
+const JOYSTICK_DEADZONE := 0.12
 
 
 func _ready() -> void:
@@ -45,8 +48,9 @@ func _gui_input(event: InputEvent) -> void:
 
 
 func _begin_touch(index: int, position: Vector2) -> void:
-	if _joystick_touch == -1 and _inside_circle(position, _joystick_center(), _joystick_radius() * 1.35):
+	if _joystick_touch == -1 and position.x <= size.x * 0.42:
 		_joystick_touch = index
+		_joystick_origin = position
 		_update_movement(position)
 	elif _inside_circle(position, _attack_center(), _button_radius()):
 		attack_requested.emit()
@@ -76,7 +80,17 @@ func _end_touch(index: int) -> void:
 
 func _update_movement(position: Vector2) -> void:
 	var offset := position - _joystick_center()
-	_movement = (Vector2(offset.x, -offset.y) / _joystick_radius()).limit_length()
+	var raw_movement := Vector2(offset.x, -offset.y) / _joystick_radius()
+	var strength := raw_movement.length()
+	if strength <= JOYSTICK_DEADZONE:
+		_movement = Vector2.ZERO
+	else:
+		var adjusted_strength := clampf(
+			(strength - JOYSTICK_DEADZONE) / (1.0 - JOYSTICK_DEADZONE),
+			0.0,
+			1.0
+		)
+		_movement = raw_movement.normalized() * adjusted_strength
 	movement_changed.emit(_movement)
 	queue_redraw()
 
@@ -86,6 +100,8 @@ func _inside_circle(point: Vector2, center: Vector2, radius: float) -> bool:
 
 
 func _joystick_center() -> Vector2:
+	if _joystick_touch != -1:
+		return _joystick_origin
 	return Vector2(size.x * 0.15, size.y * 0.78)
 
 
@@ -118,7 +134,7 @@ func _draw() -> void:
 		return
 
 	var radius := _joystick_radius()
-	var knob_offset := _movement * radius * 0.65 if _joystick_touch != -1 else Vector2.ZERO
+	var knob_offset := Vector2(_movement.x, -_movement.y) * radius * 0.65 if _joystick_touch != -1 else Vector2.ZERO
 	draw_circle(_joystick_center(), radius, Color(0.06, 0.08, 0.10, 0.42))
 	draw_arc(_joystick_center(), radius, 0.0, TAU, 48, Color(0.85, 0.88, 0.90, 0.72), 3.0)
 	draw_circle(_joystick_center() + knob_offset, radius * 0.34, Color(0.85, 0.88, 0.90, 0.68))

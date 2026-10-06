@@ -18,6 +18,14 @@ func _create_map_collisions() -> void:
 	if map_root.has_node("GeneratedMapCollision"):
 		return
 
+	var meshes_without_collisions: Array[MeshInstance3D] = []
+	for node in map_root.find_children("*", "MeshInstance3D", true, false):
+		var mesh_instance := node as MeshInstance3D
+		if mesh_instance.mesh != null and not _has_static_body_ancestor(mesh_instance, map_root):
+			meshes_without_collisions.append(mesh_instance)
+	if meshes_without_collisions.is_empty():
+		return
+
 	var collision_body := StaticBody3D.new()
 	collision_body.name = "GeneratedMapCollision"
 	collision_body.collision_layer = 1
@@ -25,12 +33,7 @@ func _create_map_collisions() -> void:
 	map_root.add_child(collision_body)
 
 	var inverse_map_transform := map_root.global_transform.affine_inverse()
-	for node in map_root.find_children("*", "MeshInstance3D", true, false):
-		var mesh_instance := node as MeshInstance3D
-		if mesh_instance.mesh == null:
-			continue
-		if _has_static_body_ancestor(mesh_instance, map_root):
-			continue
+	for mesh_instance in meshes_without_collisions:
 		var shape := mesh_instance.mesh.create_trimesh_shape()
 		if shape == null:
 			push_error("Could not create a static collision shape for map mesh: %s" % mesh_instance.get_path())
@@ -41,7 +44,6 @@ func _create_map_collisions() -> void:
 		collision_shape.shape = shape
 		collision_body.add_child(collision_shape)
 		collision_shape.transform = inverse_map_transform * mesh_instance.global_transform
-
 
 func _has_static_body_ancestor(node: Node, stop_node: Node) -> bool:
 	var ancestor := node.get_parent()

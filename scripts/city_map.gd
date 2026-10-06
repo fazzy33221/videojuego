@@ -10,6 +10,7 @@ var metal: StandardMaterial3D
 var foliage: StandardMaterial3D
 var bark: StandardMaterial3D
 var lamp_glow: StandardMaterial3D
+var decorations: StaticBody3D
 var building_colors: Array[Color] = [
 	Color(0.37, 0.39, 0.42),
 	Color(0.48, 0.40, 0.34),
@@ -21,6 +22,11 @@ var building_colors: Array[Color] = [
 
 func _ready() -> void:
 	_create_materials()
+	decorations = StaticBody3D.new()
+	decorations.name = "NonCollidingDecorations"
+	decorations.collision_layer = 0
+	decorations.collision_mask = 0
+	add_child(decorations)
 	_build_ground_and_roads()
 	_build_buildings()
 	_build_street_lights()
@@ -67,12 +73,12 @@ func _build_ground_and_roads() -> void:
 		_add_solid_box(self, "CrosswalkSidewalk", Vector3(0, 0.06, z), Vector3(124, 0.12, 1.2), concrete)
 
 	for dash in range(-11, 12):
-		_add_visual_box(self, Vector3(-2.7, 0.052, dash * 4.7), Vector3(0.13, 0.018, 2.2), road_line)
-		_add_visual_box(self, Vector3(2.7, 0.052, dash * 4.7), Vector3(0.13, 0.018, 2.2), road_line)
+		_add_visual_box(decorations, Vector3(-2.7, 0.052, dash * 4.7), Vector3(0.13, 0.018, 2.2), road_line)
+		_add_visual_box(decorations, Vector3(2.7, 0.052, dash * 4.7), Vector3(0.13, 0.018, 2.2), road_line)
 	for street_z in [-43.0, 0.0, 43.0]:
 		for stripe in range(-3, 4):
-			_add_visual_box(self, Vector3(stripe * 1.5, 0.058, street_z - 4.0), Vector3(0.8, 0.025, 3.2), road_line)
-			_add_visual_box(self, Vector3(stripe * 1.5, 0.058, street_z + 4.0), Vector3(0.8, 0.025, 3.2), road_line)
+			_add_visual_box(decorations, Vector3(stripe * 1.5, 0.058, street_z - 4.0), Vector3(0.8, 0.025, 3.2), road_line)
+			_add_visual_box(decorations, Vector3(stripe * 1.5, 0.058, street_z + 4.0), Vector3(0.8, 0.025, 3.2), road_line)
 
 
 func _build_buildings() -> void:
@@ -160,7 +166,7 @@ func _add_lamp(position: Vector3) -> void:
 	pole.mesh = pole_mesh
 	pole.material_override = metal
 	pole.position = position + Vector3.UP * 3.0
-	add_child(pole)
+	decorations.add_child(pole)
 
 	var arm := MeshInstance3D.new()
 	var arm_mesh := BoxMesh.new()
@@ -168,7 +174,7 @@ func _add_lamp(position: Vector3) -> void:
 	arm.mesh = arm_mesh
 	arm.material_override = metal
 	arm.position = position + Vector3.UP * 5.8 + Vector3(0.45, 0, 0)
-	add_child(arm)
+	decorations.add_child(arm)
 
 	var lamp := MeshInstance3D.new()
 	var lamp_mesh := BoxMesh.new()
@@ -176,7 +182,7 @@ func _add_lamp(position: Vector3) -> void:
 	lamp.mesh = lamp_mesh
 	lamp.material_override = lamp_glow
 	lamp.position = position + Vector3(0.85, 5.7, 0)
-	add_child(lamp)
+	decorations.add_child(lamp)
 
 	if int(absf(position.z) + absf(position.x)) % 32 == 0:
 		var light := OmniLight3D.new()
@@ -185,7 +191,7 @@ func _add_lamp(position: Vector3) -> void:
 		light.omni_range = 9.0
 		light.shadow_enabled = false
 		light.position = position + Vector3.UP * 5.3
-		add_child(light)
+		decorations.add_child(light)
 
 
 func _build_trees() -> void:
@@ -203,7 +209,7 @@ func _add_tree(position: Vector3) -> void:
 	trunk.mesh = trunk_mesh
 	trunk.material_override = bark
 	trunk.position = position + Vector3.UP * 1.15
-	add_child(trunk)
+	decorations.add_child(trunk)
 
 	var crown := MeshInstance3D.new()
 	var crown_mesh := SphereMesh.new()
@@ -214,14 +220,14 @@ func _add_tree(position: Vector3) -> void:
 	crown.mesh = crown_mesh
 	crown.material_override = foliage
 	crown.position = position + Vector3.UP * 3.0
-	add_child(crown)
+	decorations.add_child(crown)
 
 
 func _build_cars_and_barriers() -> void:
 	_add_car(Vector3(-6.0, 0, 19.0), Color(0.37, 0.13, 0.10))
 	_add_car(Vector3(6.0, 0, -16.0), Color(0.17, 0.24, 0.31))
 	_add_solid_box(self, "RoadBarrier", Vector3(-6.7, 0.65, -1.0), Vector3(1.0, 1.3, 4.0), metal)
-	_add_visual_box(self, Vector3(-6.7, 1.38, -1.0), Vector3(1.04, 0.16, 4.05), road_line)
+	_add_visual_box(decorations, Vector3(-6.7, 1.38, -1.0), Vector3(1.04, 0.16, 4.05), road_line)
 
 
 func _add_car(position: Vector3, paint: Color) -> void:
