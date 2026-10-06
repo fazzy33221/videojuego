@@ -121,7 +121,7 @@ func _build_weapons_page() -> void:
 	description.text = "Por ahora solo están disponibles los puños.\nLa linterna va contigo; actívala con LUZ para iluminar un círculo delante de ti.\nLas armas de fuego estarán disponibles más adelante."
 	content.add_child(description)
 
-	var fists_button := _create_button("FistsButton", "PUÑOS · EQUIPAR")
+	var fists_button := _create_button("FistsButton", "PUÑOS · EQUIPADOS")
 	fists_button.pressed.connect(_select_fists)
 	content.add_child(fists_button)
 
@@ -220,9 +220,6 @@ func _on_sensitivity_changed(value: float) -> void:
 	camera_sensitivity = value
 	_save_settings()
 	_apply_settings()
-
-
-	# Only fists are implemented at this stage; reject unknown saved choices.
 
 
 func _show_weapons_page() -> void:

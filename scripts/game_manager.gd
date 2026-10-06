@@ -3,6 +3,12 @@ extends Node3D
 const ACT_TWO: PackedScene = preload("res://scenes/levels/act_two.tscn")
 const SAVE_PATH := "user://continue.cfg"
 const AUTOSAVE_INTERVAL := 5.0
+const CINEMATIC_STATE_PATH := "user://cinematics.cfg"
+const INTRO_VIDEO_PATH := "res://assets/videos/intro_logo.ogv"
+const NEW_GAME_VIDEO_PATHS: Array[String] = [
+	"res://assets/videos/partida_nueva_1.ogv",
+	"res://assets/videos/partida_nueva_2.ogv",
+]
 
 @onready var player: CharacterBody3D = $Player
 @onready var level_container: Node3D = $LevelContainer
@@ -15,6 +21,13 @@ const AUTOSAVE_INTERVAL := 5.0
 var active_level: Node3D
 var changing_level: bool = false
 var autosave_timer: float = AUTOSAVE_INTERVAL
+var cinematic_layer: Control
+var logo_panel: Control
+var cinematic_video: VideoStreamPlayer
+var skip_button: Button
+var cinematic_queue: Array[String] = []
+var cinematic_index: int = 0
+var cinematic_mode: StringName = &""
 
 
 func _ready() -> void:
@@ -40,6 +53,135 @@ func _ready() -> void:
 	health_label.visible = false
 	start_menu.set_continue_available(FileAccess.file_exists(SAVE_PATH))
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_setup_cinematic_layer()
+	_play_intro_if_needed()
+
+
+func _setup_cinematic_layer() -> void:
+	cinematic_layer = Control.new()
+	cinematic_layer.name = "CinematicLayer"
+	cinematic_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	cinematic_layer.mouse_filter = Control.MOUSE_FILTER_STOP
+	cinematic_layer.hide()
+	$HUD.add_child(cinematic_layer)
+
+	var background := ColorRect.new()
+	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	background.color = Color.BLACK
+	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	cinematic_layer.add_child(background)
+
+	cinematic_video = VideoStreamPlayer.new()
+	cinematic_video.name = "Video"
+	cinematic_video.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	cinematic_video.expand = true
+	cinematic_video.finished.connect(_on_cinematic_finished)
+	cinematic_layer.add_child(cinematic_video)
+
+	logo_panel = Control.new()
+	logo_panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	cinematic_layer.add_child(logo_panel)
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	logo_panel.add_child(center)
+	var logo_content := VBoxContainer.new()
+	logo_content.alignment = BoxContainer.ALIGNMENT_CENTER
+	logo_content.add_theme_constant_override("separation", 18)
+	center.add_child(logo_content)
+	var title := Label.new()
+	title.text = "CDMX: ZONA CERO"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_color_override("font_color", Color(0.91, 0.82, 0.58, 1))
+	title.add_theme_font_size_override("font_size", 48)
+	logo_content.add_child(title)
+	var subtitle := Label.new()
+	subtitle.text = "SOBREVIVE A LA INFECCION"
+	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	subtitle.add_theme_color_override("font_color", Color(0.84, 0.88, 0.86, 1))
+	subtitle.add_theme_font_size_override("font_size", 18)
+	logo_content.add_child(subtitle)
+
+	skip_button = Button.new()
+	skip_button.name = "SkipButton"
+	skip_button.text = "SALTAR"
+	skip_button.custom_minimum_size = Vector2(150, 62)
+	skip_button.anchor_left = 1.0
+	skip_button.anchor_top = 1.0
+	skip_button.anchor_right = 1.0
+	skip_button.anchor_bottom = 1.0
+	skip_button.offset_left = -180.0
+	skip_button.offset_top = -94.0
+	skip_button.offset_right = -24.0
+	skip_button.offset_bottom = -24.0
+	skip_button.add_theme_font_size_override("font_size", 20)
+	skip_button.pressed.connect(_skip_cinematic_sequence)
+	cinematic_layer.add_child(skip_button)
+
+
+func _play_intro_if_needed() -> void:
+	var state := ConfigFile.new()
+	if state.load(CINEMATIC_STATE_PATH) == OK and state.get_value("cinematics", "intro_seen", false):
+		return
+	start_menu.hide()
+	cinematic_mode = &"startup_logo"
+	cinematic_layer.show()
+	logo_panel.show()
+	cinematic_video.hide()
+	skip_button.hide()
+	await get_tree().create_timer(1.6).timeout
+	if cinematic_mode != &"startup_logo" or not is_inside_tree():
+		return
+	_start_cinematic_sequence([INTRO_VIDEO_PATH], &"intro")
+
+
+func _start_cinematic_sequence(paths: Array[String], mode: StringName) -> void:
+	cinematic_mode = mode
+	cinematic_queue = paths.duplicate()
+	cinematic_index = 0
+	cinematic_layer.show()
+	logo_panel.hide()
+	cinematic_video.show()
+	skip_button.show()
+	_play_next_cinematic()
+
+
+func _play_next_cinematic() -> void:
+	while cinematic_index < cinematic_queue.size():
+		var path := cinematic_queue[cinematic_index]
+		cinematic_index += 1
+		var stream := load(path) as VideoStream
+		if stream == null:
+			push_warning("No se pudo cargar el video: %s" % path)
+			continue
+		cinematic_video.stream = stream
+		cinematic_video.play()
+		return
+	_finish_cinematic_sequence()
+
+
+func _on_cinematic_finished() -> void:
+	_play_next_cinematic()
+
+
+func _skip_cinematic_sequence() -> void:
+	cinematic_queue.clear()
+	if cinematic_video.is_playing():
+		cinematic_video.stop()
+	_finish_cinematic_sequence()
+
+
+func _finish_cinematic_sequence() -> void:
+	cinematic_video.stop()
+	cinematic_layer.hide()
+	var finished_mode := cinematic_mode
+	cinematic_mode = &""
+	if finished_mode == &"intro":
+		var state := ConfigFile.new()
+		state.set_value("cinematics", "intro_seen", true)
+		state.save(CINEMATIC_STATE_PATH)
+		start_menu.show()
+	elif finished_mode == &"new_game":
+		_begin_game(null)
 
 
 func _process(delta: float) -> void:
@@ -54,7 +196,7 @@ func _process(delta: float) -> void:
 func _start_new_game() -> void:
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE_PATH))
 	start_menu.set_continue_available(false)
-	_begin_game(null)
+	_start_cinematic_sequence(NEW_GAME_VIDEO_PATHS, &"new_game")
 
 
 func _continue_game() -> void:
