@@ -11,6 +11,8 @@ const JOYSTICK_DEADZONE := 0.12
 const DEFAULT_LOCATION := "Barrio del Mercado"
 const DEFAULT_EXITS := "Centro Antiguo, ruta de evacuación"
 
+@export var run_verification_on_start := false
+
 var _joystick_touch := -1
 var _look_touch := -1
 var _sprint_touch := -1
@@ -34,6 +36,8 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_refresh_hud()
 	queue_redraw()
+	if run_verification_on_start:
+		call_deferred("verify_ui_and_controls")
 
 
 func _process(_delta: float) -> void:
@@ -329,6 +333,8 @@ func verify_ui_and_controls() -> void:
 	var previous_sprint: bool = player.mobile_sprint_pressed
 	var previous_jump: bool = player.mobile_jump_requested
 	var previous_attack: bool = player.mobile_attack_requested
+	_sprint_pressed = false
+	player.set_mobile_sprint_pressed(false)
 	_verification_logs.clear()
 	_verification_running = true
 
@@ -373,6 +379,7 @@ func verify_ui_and_controls() -> void:
 	# La verificación deja el jugador como estaba antes de ejecutarse.
 	player.set_mobile_movement_input(previous_movement)
 	player.set_mobile_sprint_pressed(previous_sprint)
+	_sprint_pressed = previous_sprint
 	player.mobile_jump_requested = previous_jump
 	player.mobile_attack_requested = previous_attack
 	_movement = previous_movement
