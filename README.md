@@ -6,29 +6,11 @@ Aventura de supervivencia en Godot 4 para Android y PC. La partida nueva comienz
 
 Abre `project.godot` con Godot 4 e inicia la escena principal. La pantalla de inicio ofrece **Nueva partida**, **Continuar**, una guia de controles y opciones de volumen y sensibilidad de camara. El progreso se guarda localmente en el dispositivo. Godot importara los recursos 3D la primera vez.
 
-### Vista local en Chrome
-
-Con Godot 4.7.2 y los Web export templates instalados, abre PowerShell en la carpeta del repositorio y ejecuta:
-
-```powershell
-.\run_web.ps1
-```
-
-El script exporta la versión web y abre `http://127.0.0.1:8060` en Chrome. Mantén abierta la ventana de PowerShell mientras juegas. Después de cada cambio local, vuelve a ejecutar el script para exportar y recargar la versión actualizada.
-
-Cada push también compila una build Web. Puedes descargar el artefacto `videojuego-web-build` desde GitHub Actions, extraerlo en `build/web` y servirlo con:
-
-```powershell
-.\run_web.ps1 -ServeOnly
-```
-
-El servidor escucha solo en tu PC; no publica el juego en internet.
-
 ### Entorno de desarrollo en Codespaces
 
-El proyecto no necesita un entorno virtual de Python. Para trabajar con una version reproducible de Godot, abre el repositorio en GitHub Codespaces y selecciona **Reopen in Container**. El contenedor usa Godot 4.7.2, la misma versión que la compilación de Android, e importa los recursos al crearse.
+El proyecto no necesita un entorno virtual de Python. Para trabajar con una version reproducible de Godot, abre el repositorio en GitHub Codespaces y selecciona **Reopen in Container**. El contenedor usa Godot 4.7.2, la misma version que la compilacion de Android, e importa los recursos al crearse.
 
-Puedes comprobar la versión con `godot --version` y validar la escena principal en modo sin interfaz con `godot --headless --path . --quit-after 1`. Para usar el editor gráfico, instala Godot 4.7.2 en tu equipo y abre `project.godot`.
+Puedes comprobar la version con `godot --version` y validar la escena principal en modo sin interfaz con `godot --headless --path . --quit-after 1`. Para usar el editor grafico, instala Godot 4.7.2 en tu equipo y abre `project.godot`.
 
 ## Controles
 
@@ -60,6 +42,14 @@ El nivel principal utiliza `scripts/reforma_environment.gd` para crear calles, m
 La avenida norte-sur conecta la zona comercial del sur con el Centro Antiguo. Calles transversales forman barrios de escala peatonal; los callejones y patios entre edificios dan rutas secundarias. La ciudad distingue las zonas mediante alturas, paletas y espacios abiertos. Entre sus referencias están la torre del centro, la escuela, el mercado con gasolinera, las bodegas y el parque con cancha. Los edificios usan colisiones de caja y el detalle se mantiene acotado para Android.
 
 La escena `scenes/levels/reforma_map_test.tscn` permite recorrer el blockout urbano de forma independiente con **Run Current Scene (F6)**.
+
+### Texturas e iluminación de la ciudad
+
+El asfalto, el concreto y la lámina oxidada usan mapas PBR 1K (albedo, normal OpenGL y roughness) de [Poly Haven](https://polyhaven.com), con licencia CC0. Los archivos están incluidos en `assets/textures/environment/`; el juego no los descarga durante la partida. El mapeado triplanar conserva el tamaño del detalle en calles, muros y props para evitar estiramientos y parpadeos al moverse.
+
+La escena `act_two.tscn` incluye un ciclo de día y noche de 12 minutos. La luz direccional, el ambiente y las lámparas de calle cambian de forma gradual durante el ciclo.
+
+El movimiento del jugador usa estados de reposo, caminar, correr y salto con clips sin armas; el sprint acelera el ciclo de caminata y el control mantiene los puños libres.
 
 ## Compilacion Android
 

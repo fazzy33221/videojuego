@@ -1,12 +1,24 @@
 extends Node
-## Loads CC0 PBR maps from Poly Haven once and caches them in user:// for later runs.
+## Loads bundled CC0 PBR maps synchronously so textures are present from the
+## first rendered frame and never depend on HTTP, CORS, or player movement.
 
-const CACHE_DIRECTORY := "user://pbr_cache"
-const POLYHAVEN_BASE := "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k"
-const MAP_SUFFIXES := {
-	"albedo": "diff",
-	"normal": "nor_gl",
-	"roughness": "rough",
+const TEXTURE_ROOT := "res://assets/textures/environment/"
+const TEXTURE_SETS := {
+	"asphalt_02": {
+		"albedo": "asphalt_02_diff_1k.jpg",
+		"normal": "asphalt_02_nor_gl_1k.jpg",
+		"roughness": "asphalt_02_rough_1k.jpg",
+	},
+	"concrete_wall_009": {
+		"albedo": "concrete_wall_009_diff_1k.jpg",
+		"normal": "concrete_wall_009_nor_gl_1k.jpg",
+		"roughness": "concrete_wall_009_rough_1k.jpg",
+	},
+	"rusty_metal_sheet": {
+		"albedo": "rusty_metal_sheet_diff_1k.jpg",
+		"normal": "rusty_metal_sheet_nor_gl_1k.jpg",
+		"roughness": "rusty_metal_sheet_rough_1k.jpg",
+	},
 }
 
 var material_groups: Dictionary = {}
@@ -14,42 +26,21 @@ var material_groups: Dictionary = {}
 
 func configure(groups: Dictionary) -> void:
 	material_groups = groups
-	_load_missing_maps()
+	_apply_bundled_maps()
 
 
-func _load_missing_maps() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(CACHE_DIRECTORY))
-	var http := HTTPRequest.new()
-	http.timeout = 20.0
-	add_child(http)
-
-	for asset_id in material_groups:
+func _apply_bundled_maps() -> void:
+	for texture_set_name in TEXTURE_SETS:
+		var map_paths: Dictionary = TEXTURE_SETS[texture_set_name]
 		var maps: Dictionary = {}
-		for map_kind in MAP_SUFFIXES:
-			var file_name := "%s_%s_1k.jpg" % [asset_id, MAP_SUFFIXES[map_kind]]
-			var bytes := _read_cached(file_name)
-			if bytes.is_empty():
-				var url := "%s/%s/%s" % [POLYHAVEN_BASE, asset_id, file_name]
-				var error := http.request(url)
-				if error != OK:
-					push_warning("PBR texture request failed (%s): %s" % [file_name, error])
-					continue
-				var response: Array = await http.request_completed
-				if response[1] != 200 or response[3].is_empty():
-					push_warning("PBR texture download failed: %s (HTTP %s)" % [file_name, response[1]])
-					continue
-				bytes = response[3]
-				_write_cached(file_name, bytes)
-
-			var image := Image.new()
-			if image.load_jpg_from_buffer(bytes) != OK:
-				push_warning("Could not decode PBR texture: %s" % file_name)
+		for map_kind in map_paths:
+			var texture_path := TEXTURE_ROOT + map_paths[map_kind]
+			var texture := load(texture_path) as Texture2D
+			if texture == null:
+				push_error("Could not load bundled PBR texture: %s" % texture_path)
 				continue
-			maps[map_kind] = ImageTexture.create_from_image(image)
-
-		_apply_maps(material_groups[asset_id], maps)
-
-	http.queue_free()
+			maps[map_kind] = texture
+		_apply_maps(material_groups.get(texture_set_name, []), maps)
 
 
 func _apply_maps(materials: Array, maps: Dictionary) -> void:
@@ -64,18 +55,5 @@ func _apply_maps(materials: Array, maps: Dictionary) -> void:
 		if maps.has("roughness"):
 			material.roughness_texture = maps["roughness"]
 			material.roughness = 1.0
-
-
-func _read_cached(file_name: String) -> PackedByteArray:
-	var path := "%s/%s" % [CACHE_DIRECTORY, file_name]
-	if not FileAccess.file_exists(path):
-		return PackedByteArray()
-	var file := FileAccess.open(path, FileAccess.READ)
-	return file.get_buffer(file.get_length()) if file != null else PackedByteArray()
-
-
-func _write_cached(file_name: String, bytes: PackedByteArray) -> void:
-	var file := FileAccess.open("%s/%s" % [CACHE_DIRECTORY, file_name], FileAccess.WRITE)
-	if file != null:
-		file.store_buffer(bytes)
-
+		material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		material.texture_repeat = BaseMaterial3D.TEXTURE_REPEAT_ENABLED

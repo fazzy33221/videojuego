@@ -5,14 +5,13 @@ const ANIMATION_CLIPS: Dictionary = {
 	"walk": "res://assets/models/zombies/player/walking.fbx",
 	"run": "res://assets/models/zombies/player/walking.fbx",
 	"jump": "res://assets/models/zombies/player/hit reaction.fbx",
-	"armed_idle": "res://assets/models/zombies/player/rifle aiming idle.fbx",
-	"armed_walk": "res://assets/models/zombies/player/rifle run.fbx",
-	"armed_run": "res://assets/models/zombies/player/rifle run.fbx",
-	"armed_jump": "res://assets/models/zombies/player/rifle jump.fbx",
 }
+
+enum LocomotionState { IDLE, WALK, RUN, AIRBORNE }
 
 @export var walk_speed: float = 5.0
 @export var sprint_speed: float = 8.0
+@export var movement_acceleration: float = 18.0
 @export var jump_velocity: float = 4.5
 @export var mouse_sensitivity: float = 0.0025
 @export var camera_follow_speed: float = 12.0
@@ -29,6 +28,7 @@ const ANIMATION_CLIPS: Dictionary = {
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var character_animator: AnimationPlayer
 var current_animation: StringName = &""
+var locomotion_state: LocomotionState = LocomotionState.IDLE
 var has_weapon: bool = false
 var weapon_node: Node3D
 var weapon_visual_defaults: Dictionary = {}
@@ -158,6 +158,7 @@ func _configure_movement_actions() -> void:
 	_register_action(&"move_right", [KEY_D, KEY_RIGHT])
 	_register_action(&"move_forward", [KEY_W, KEY_UP])
 	_register_action(&"move_backward", [KEY_S, KEY_DOWN])
+	_register_action(&"jump", [KEY_SPACE])
 	if not InputMap.has_action(&"attack"):
 		InputMap.add_action(&"attack")
 		var attack_event := InputEventMouseButton.new()
@@ -224,39 +225,18 @@ func _load_animation_clips() -> void:
 func _play_character_animation(animation_state: StringName) -> void:
 	if character_animator == null:
 		return
-	var selected_animation := animation_state
-	if has_weapon:
-		match animation_state:
-			&"idle":
-				selected_animation = &"armed_idle"
-			&"walk":
-				selected_animation = &"armed_walk"
-			&"run":
-				selected_animation = &"armed_run"
-			&"jump":
-				selected_animation = &"armed_jump"
-
-	if current_animation == selected_animation:
+	# All locomotion uses unarmed clips. Equipping an item must never switch the
+	# survivor into the rifle-holding animation set.
+	if current_animation == animation_state:
 		return
-	if selected_animation != &"idle" and not character_animator.has_animation(selected_animation):
-		selected_animation = animation_state
-	if selected_animation == &"idle":
-		if not character_animator.has_animation(selected_animation):
-			character_animator.stop()
-			current_animation = &""
-			return
-		current_animation = selected_animation
-		character_animator.speed_scale = 1.0
-		character_animator.play(selected_animation, 0.12)
-		return
-	if not character_animator.has_animation(selected_animation):
+	if not character_animator.has_animation(animation_state):
 		character_animator.stop()
 		current_animation = &""
 		return
 
-	current_animation = selected_animation
-	character_animator.speed_scale = 1.35 if animation_state == &"run" else 1.0
-	character_animator.play(selected_animation, 0.12)
+	current_animation = animation_state
+	character_animator.speed_scale = 1.55 if animation_state == &"run" else 1.0
+	character_animator.play(animation_state, 0.18)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -276,6 +256,54 @@ func _unhandled_input(event: InputEvent) -> void:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
+func _read_movement_input() -> Vector2:
+	var keyboard_input := Vector2(
+		Input.get_axis(&"move_left", &"move_right"),
+		Input.get_axis(&"move_backward", &"move_forward")
+	)
+	return (keyboard_input + mobile_movement_input).limit_length()
+
+
+func _camera_relative_direction(movement_input: Vector2) -> Vector3:
+	var camera_basis := camera_pivot.global_transform.basis
+	var camera_right := camera_basis.x
+	var camera_forward := -camera_basis.z
+	camera_right.y = 0.0
+	camera_forward.y = 0.0
+	return (
+		camera_right.normalized() * movement_input.x
+		+ camera_forward.normalized() * movement_input.y
+	).normalized()
+
+
+func _apply_horizontal_movement(direction: Vector3, sprinting: bool, delta: float) -> void:
+	var speed := sprint_speed if sprinting else walk_speed
+	var target_x := direction.x * speed
+	var target_z := direction.z * speed
+	var acceleration := movement_acceleration if not direction.is_zero_approx() else movement_acceleration * 1.5
+	velocity.x = move_toward(velocity.x, target_x, acceleration * delta)
+	velocity.z = move_toward(velocity.z, target_z, acceleration * delta)
+
+
+func _update_locomotion_state(movement_input: Vector2, sprinting: bool) -> void:
+	var next_state := LocomotionState.IDLE
+	if not is_on_floor():
+		next_state = LocomotionState.AIRBORNE
+	elif not movement_input.is_zero_approx():
+		next_state = LocomotionState.RUN if sprinting else LocomotionState.WALK
+	if next_state == locomotion_state:
+		return
+	locomotion_state = next_state
+	var animation_by_state := {
+		LocomotionState.IDLE: &"idle",
+		LocomotionState.WALK: &"walk",
+		LocomotionState.RUN: &"run",
+		LocomotionState.AIRBORNE: &"jump",
+	}
+	current_animation = &""
+	_play_character_animation(animation_by_state[next_state])
+
+
 func _physics_process(delta: float) -> void:
 	if global_position.y < -8.0:
 		global_position = safe_spawn_position
@@ -287,25 +315,12 @@ func _physics_process(delta: float) -> void:
 		_perform_melee_attack()
 	mobile_attack_requested = false
 
-	var keyboard_input := Vector2(
-		Input.get_axis(&"move_left", &"move_right"),
-		Input.get_axis(&"move_backward", &"move_forward")
-	)
-	var movement_input := (keyboard_input + mobile_movement_input).limit_length()
-	var camera_basis := camera_pivot.global_transform.basis
-	var camera_right := camera_basis.x
-	var camera_forward := -camera_basis.z
-	camera_right.y = 0.0
-	camera_forward.y = 0.0
-	var direction := camera_right.normalized() * movement_input.x
-	direction += camera_forward.normalized() * movement_input.y
-	direction = direction.normalized()
+	var movement_input := _read_movement_input()
+	var direction := _camera_relative_direction(movement_input)
 	var sprinting := Input.is_key_pressed(KEY_SHIFT) or mobile_sprint_pressed
-	var movement_speed := sprint_speed if sprinting else walk_speed
-	velocity.x = direction.x * movement_speed
-	velocity.z = direction.z * movement_speed
+	_apply_horizontal_movement(direction, sprinting, delta)
 
-	var jump_pressed := Input.is_key_pressed(KEY_SPACE) or mobile_jump_requested
+	var jump_pressed := Input.is_action_just_pressed(&"jump") or mobile_jump_requested
 	mobile_jump_requested = false
 	if not is_on_floor():
 		velocity.y -= gravity * delta
@@ -316,12 +331,8 @@ func _physics_process(delta: float) -> void:
 		var facing_angle := atan2(-direction.x, -direction.z)
 		rotation.y = lerp_angle(rotation.y, facing_angle, 10.0 * delta)
 
-	var animation_state: StringName = &"jump" if not is_on_floor() else &"idle"
-	if is_on_floor() and not movement_input.is_zero_approx():
-		animation_state = &"run" if sprinting else &"walk"
-	_play_character_animation(animation_state)
-
 	move_and_slide()
+	_update_locomotion_state(movement_input, sprinting)
 	if is_on_floor():
 		safe_spawn_position = global_position
 

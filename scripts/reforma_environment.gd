@@ -495,6 +495,7 @@ func _create_street_lights() -> void:
 			lamp.omni_range = 7.0
 			lamp.shadow_enabled = false
 			lamp.position = Vector3(side * 14.4, 6.0, float(z))
+			lamp.add_to_group("street_lights")
 			decorations.add_child(lamp)
 
 
@@ -591,7 +592,8 @@ func _add_building(
 func _create_ground_material() -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.albedo_color = Color(0.22, 0.23, 0.22)
-	material.uv1_scale = SIDEWALK_TILE_REPEAT
+	material.uv1_triplanar = true
+	material.uv1_scale = Vector3(0.35, 0.35, 0.35)
 	material.roughness = 1.0
 	return material
 
@@ -615,7 +617,10 @@ func _create_tiled_material(
 	var material := StandardMaterial3D.new()
 	material.albedo_color = base_color
 	material.albedo_texture = texture
-	material.uv1_scale = uv_repeat
+	# World-space triplanar mapping keeps detail the same size on long roads,
+	# building faces, and box props instead of stretching one UV island.
+	material.uv1_triplanar = true
+	material.uv1_scale = Vector3(0.35, 0.35, 0.35)
 	material.roughness = 0.92
 	return material
 

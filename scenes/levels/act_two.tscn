@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/level_controller.gd" id="1_level"]
 [ext_resource type="Script" path="res://scripts/reforma_environment.gd" id="2_city"]
 [ext_resource type="PackedScene" path="res://scenes/zombie.tscn" id="3_zombie"]
+[ext_resource type="Script" path="res://scripts/day_night_cycle.gd" id="4_day_night"]
 
 [sub_resource type="BoxShape3D" id="CityFloorShape"]
 size = Vector3(320, 0.6, 320)
@@ -51,6 +52,11 @@ navigation_mesh = SubResource("LevelNavigationMesh")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("MetroEnvironment")
+
+[node name="DayNightCycle" type="Node" parent="."]
+script = ExtResource("4_day_night")
+cycle_duration_seconds = 720.0
+initial_time_of_day = 0.36
 
 [node name="SafetyGround" type="StaticBody3D" parent="."]
 position = Vector3(0, -0.42, 0)
