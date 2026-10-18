@@ -25,6 +25,11 @@ jobs:
           HOME: /root
         run: godot --headless --editor --path . --quit
 
+      - name: Run mobile controls smoke test
+        env:
+          HOME: /root
+        run: godot --headless --path . --script tests/mobile_controls_smoke.gd
+
       - name: Export Android APK
         env:
           HOME: /root
@@ -39,3 +44,5 @@ jobs:
           path: build/android/juego.apk
           if-no-files-found: error
           retention-days: 14
+
+
