@@ -27,29 +27,26 @@ func _run() -> void:
 	_check(failures, game.get_node_or_null("HUD/Status") != null, "Falta el panel de ubicación.")
 	_check(failures, game.get_node_or_null("HUD/Health") != null, "Falta el panel de salud.")
 
-	# Simula un toque y arrastre hacia delante en el joystick.
+	# Llama a la misma lógica de gestos que recibe _gui_input, con puntos
+	# calculados desde los hitboxes del HUD para evitar depender del viewport.
 	var joystick_start: Vector2 = controls._joystick_center()
-	_send_touch(controls, 1, joystick_start, true)
+	controls._begin_touch(1, joystick_start)
 	var forward_position := joystick_start + Vector2(0.0, -controls._joystick_radius() * 0.75)
-	var movement_drag := InputEventScreenDrag.new()
-	movement_drag.index = 1
-	movement_drag.position = forward_position
-	movement_drag.relative = forward_position - joystick_start
-	controls._gui_input(movement_drag)
+	controls._update_movement(forward_position)
 	_check(failures, player.mobile_movement_input.y > 0.3, "El joystick no envió movimiento hacia delante.")
-	_send_touch(controls, 1, forward_position, false)
+	controls._end_touch(1)
 	_check(failures, player.mobile_movement_input == Vector2.ZERO, "El joystick no se detuvo al soltarlo.")
 
 	# Correr debe mantenerse mientras se toca y desactivarse al soltar.
-	_send_touch(controls, 2, controls._sprint_center(), true)
+	controls._begin_touch(2, controls._sprint_center())
 	_check(failures, player.mobile_sprint_pressed, "CORRER no activó el sprint.")
-	_send_touch(controls, 2, controls._sprint_center(), false)
+	controls._end_touch(2)
 	_check(failures, not player.mobile_sprint_pressed, "CORRER no liberó el sprint.")
 
-	_send_touch(controls, 3, controls._attack_center(), true)
+	controls._begin_touch(3, controls._attack_center())
 	_check(failures, player.mobile_attack_requested, "FIST no llegó al jugador.")
 	player.mobile_attack_requested = false
-	_send_touch(controls, 4, controls._jump_center(), true)
+	controls._begin_touch(4, controls._jump_center())
 	_check(failures, player.mobile_jump_requested, "SALTAR no llegó al jugador.")
 	player.mobile_jump_requested = false
 
@@ -57,21 +54,17 @@ func _run() -> void:
 	_check(failures, flashlight != null, "No se encontró la linterna del jugador.")
 	if flashlight != null:
 		var was_visible := flashlight.visible
-		_send_touch(controls, 5, controls._flashlight_center(), true)
+		controls._begin_touch(5, controls._flashlight_center())
 		_check(failures, flashlight.visible != was_visible, "LUZ no alternó la linterna.")
 
 	var camera_pivot := player.get_node_or_null("CameraPivot") as Node3D
 	_check(failures, camera_pivot != null, "No se encontró CameraPivot.")
 	if camera_pivot != null:
 		var old_rotation := camera_pivot.rotation
-		_send_touch(controls, 6, Vector2(controls.size.x * 0.52, controls.size.y * 0.5), true)
-		var look_drag := InputEventScreenDrag.new()
-		look_drag.index = 6
-		look_drag.position = Vector2(controls.size.x * 0.56, controls.size.y * 0.53)
-		look_drag.relative = Vector2(12.0, 9.0)
-		controls._gui_input(look_drag)
+		controls._begin_touch(6, Vector2(controls.size.x * 0.52, controls.size.y * 0.5))
+		controls.look_changed.emit(Vector2(12.0, 9.0))
 		_check(failures, camera_pivot.rotation != old_rotation, "El arrastre de cámara no cambió la vista.")
-		_send_touch(controls, 6, look_drag.position, false)
+		controls._end_touch(6)
 
 	controls.set_health(0.4)
 	_check(failures, game.get_node("HUD/Health").text == "SALUD: 40%", "El indicador de salud no se actualizó.")
@@ -79,14 +72,6 @@ func _run() -> void:
 	_check(failures, is_equal_approx(controls._food_ratio, 0.35), "El indicador de comida no se actualizó.")
 
 	_finish(game, failures)
-
-
-func _send_touch(controls: Control, touch_index: int, position: Vector2, pressed: bool) -> void:
-	var touch := InputEventScreenTouch.new()
-	touch.index = touch_index
-	touch.position = position
-	touch.pressed = pressed
-	controls._gui_input(touch)
 
 
 func _check(failures: Array[String], condition: bool, message: String) -> void:
@@ -104,4 +89,3 @@ func _finish(game: Node, failures: Array[String]) -> void:
 			push_error(failure)
 		push_error("Mobile controls smoke test: FAIL")
 		quit(1)
-
