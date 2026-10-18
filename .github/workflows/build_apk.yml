@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   build-android:
-    name: Export Android debug APK
+    name: Export Android debug APK and local Web build
     runs-on: ubuntu-latest
     container:
       image: barichello/godot-ci:4.7.2
@@ -45,4 +45,17 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+      - name: Export Web build
+        env:
+          HOME: /root
+        run: |
+          mkdir -p build/web
+          godot --headless --path . --export-debug "Web" build/web/index.html
 
+      - name: Upload Web build for local Chrome preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: videojuego-web-build
+          path: build/web/
+          if-no-files-found: error
+          retention-days: 14

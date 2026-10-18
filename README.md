@@ -6,11 +6,29 @@ Aventura de supervivencia en Godot 4 para Android y PC. La partida nueva comienz
 
 Abre `project.godot` con Godot 4 e inicia la escena principal. La pantalla de inicio ofrece **Nueva partida**, **Continuar**, una guia de controles y opciones de volumen y sensibilidad de camara. El progreso se guarda localmente en el dispositivo. Godot importara los recursos 3D la primera vez.
 
+### Vista local en Chrome
+
+Con Godot 4.7.2 y los Web export templates instalados, abre PowerShell en la carpeta del repositorio y ejecuta:
+
+```powershell
+.\run_web.ps1
+```
+
+El script exporta la versión web y abre `http://127.0.0.1:8060` en Chrome. Mantén abierta la ventana de PowerShell mientras juegas. Después de cada cambio local, vuelve a ejecutar el script para exportar y recargar la versión actualizada.
+
+Cada push también compila una build Web. Puedes descargar el artefacto `videojuego-web-build` desde GitHub Actions, extraerlo en `build/web` y servirlo con:
+
+```powershell
+.\run_web.ps1 -ServeOnly
+```
+
+El servidor escucha solo en tu PC; no publica el juego en internet.
+
 ### Entorno de desarrollo en Codespaces
 
-El proyecto no necesita un entorno virtual de Python. Para trabajar con una version reproducible de Godot, abre el repositorio en GitHub Codespaces y selecciona **Reopen in Container**. El contenedor usa Godot 4.7.2, la misma version que la compilacion de Android, e importa los recursos al crearse.
+El proyecto no necesita un entorno virtual de Python. Para trabajar con una version reproducible de Godot, abre el repositorio en GitHub Codespaces y selecciona **Reopen in Container**. El contenedor usa Godot 4.7.2, la misma versión que la compilación de Android, e importa los recursos al crearse.
 
-Puedes comprobar la version con `godot --version` y validar la escena principal en modo sin interfaz con `godot --headless --path . --quit-after 1`. Para usar el editor grafico, instala Godot 4.7.2 en tu equipo y abre `project.godot`.
+Puedes comprobar la versión con `godot --version` y validar la escena principal en modo sin interfaz con `godot --headless --path . --quit-after 1`. Para usar el editor gráfico, instala Godot 4.7.2 en tu equipo y abre `project.godot`.
 
 ## Controles
 
