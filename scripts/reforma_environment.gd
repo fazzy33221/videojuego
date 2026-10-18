@@ -593,6 +593,7 @@ func _create_ground_material() -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.albedo_color = Color(0.22, 0.23, 0.22)
 	material.uv1_triplanar = true
+	material.uv1_world_triplanar = true
 	material.uv1_scale = Vector3(0.35, 0.35, 0.35)
 	material.roughness = 1.0
 	return material
@@ -620,6 +621,7 @@ func _create_tiled_material(
 	# World-space triplanar mapping keeps detail the same size on long roads,
 	# building faces, and box props instead of stretching one UV island.
 	material.uv1_triplanar = true
+	material.uv1_world_triplanar = true
 	material.uv1_scale = Vector3(0.35, 0.35, 0.35)
 	material.roughness = 0.92
 	return material
