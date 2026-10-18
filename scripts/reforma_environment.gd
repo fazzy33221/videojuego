@@ -35,14 +35,19 @@ const DISTRICT_RESIDENTIAL := "COLONIA DEL LAGO"
 const DISTRICT_COMMERCIAL := "BARRIO DEL MERCADO"
 const DISTRICT_INDUSTRIAL := "ZONA INDUSTRIAL"
 const DISTRICT_PARK := "PARQUE DEL MIRADOR"
+const PBR_TEXTURE_LIBRARY = preload("res://scripts/pbr_texture_library.gd")
 
 var district_palettes: Dictionary = {}
 var asphalt_material: StandardMaterial3D
+var terrain_material: StandardMaterial3D
 var sidewalk_material: StandardMaterial3D
 var curb_material: StandardMaterial3D
 var median_material: StandardMaterial3D
 var crosswalk_material: StandardMaterial3D
 var building_material: StandardMaterial3D
+var metal_material: StandardMaterial3D
+var facade_materials: Array[StandardMaterial3D] = []
+var metal_materials: Array[StandardMaterial3D] = []
 var decorations: StaticBody3D
 
 
@@ -53,6 +58,7 @@ func _ready() -> void:
 	median_material = _create_tiled_material(Color(0.26, 0.34, 0.23), 4327, MEDIAN_TILE_REPEAT)
 	crosswalk_material = _create_tiled_material(Color(0.84, 0.82, 0.73), 5227)
 	building_material = _create_tiled_material(Color(0.48, 0.45, 0.41), 7919, WALL_TILE_REPEAT)
+	metal_material = _create_tiled_material(Color(0.39, 0.34, 0.29), 8191, WALL_TILE_REPEAT)
 	decorations = StaticBody3D.new()
 	decorations.name = "NonCollidingStreetDecor"
 	decorations.collision_layer = 0
@@ -66,11 +72,12 @@ func _ready() -> void:
 		DISTRICT_PARK: [Color(0.49, 0.57, 0.47), Color(0.62, 0.57, 0.43), Color(0.46, 0.55, 0.57)],
 	}
 
+	terrain_material = _create_ground_material()
 	_create_surface(
 		"Terrain",
 		Vector2(MAP_SIZE, MAP_SIZE),
 		Vector3(0.0, -0.1, 0.0),
-		_create_ground_material()
+		terrain_material
 	)
 	_create_main_avenue()
 	_create_grid_streets()
@@ -78,6 +85,14 @@ func _ready() -> void:
 	_create_urban_blocks()
 	_create_district_signs()
 	_create_street_lights()
+	var texture_library := PBR_TEXTURE_LIBRARY.new()
+	texture_library.name = "PbrTextureLibrary"
+	add_child(texture_library)
+	texture_library.configure({
+		"asphalt_02": [asphalt_material],
+		"concrete_wall_009": [terrain_material, sidewalk_material, curb_material, crosswalk_material, building_material] + facade_materials,
+		"rusty_metal_sheet": [metal_material] + metal_materials,
+	})
 
 
 func _create_main_avenue() -> void:
@@ -318,9 +333,17 @@ func _building_height_for(district: String, block_index: int, parcel_index: int)
 
 
 func _create_facade_material(color: Color) -> StandardMaterial3D:
-	var material := StandardMaterial3D.new()
+	var material := building_material.duplicate() as StandardMaterial3D
 	material.albedo_color = color
 	material.roughness = 0.88
+	facade_materials.append(material)
+	return material
+
+
+func _create_metal_material(color: Color) -> StandardMaterial3D:
+	var material := metal_material.duplicate() as StandardMaterial3D
+	material.albedo_color = color
+	metal_materials.append(material)
 	return material
 
 
@@ -338,8 +361,8 @@ func _build_landmark_block(
 			Vector3(31, 12, 25), _create_facade_material(Color(0.35, 0.39, 0.38))
 		)
 		_add_landmark_box(block_root, "WaterTank", Vector3(-16, 5, -14), Vector3(6, 10, 6), Color(0.42, 0.45, 0.41))
-		_add_landmark_box(block_root, "ShippingContainerA", Vector3(15, 1.4, 14), Vector3(12, 2.8, 4), Color(0.48, 0.26, 0.18))
-		_add_landmark_box(block_root, "ShippingContainerB", Vector3(15, 1.4, 9), Vector3(12, 2.8, 4), Color(0.22, 0.36, 0.40))
+		_add_landmark_box(block_root, "ShippingContainerA", Vector3(15, 1.4, 14), Vector3(12, 2.8, 4), Color(0.85, 0.74, 0.68))
+		_add_landmark_box(block_root, "ShippingContainerB", Vector3(15, 1.4, 9), Vector3(12, 2.8, 4), Color(0.66, 0.81, 0.84))
 		_add_landmark_label(block_root, "BODEGAS DEL NORTE", Vector3(0, 12.5, -15), Color(0.95, 0.62, 0.34))
 		return true
 
@@ -420,7 +443,10 @@ func _add_landmark_box(
 	mesh.size = size
 	var visual := MeshInstance3D.new()
 	visual.mesh = mesh
-	visual.material_override = _create_facade_material(color)
+	if box_name.contains("Container") or box_name.contains("Tank") or box_name.contains("Pump"):
+		visual.material_override = _create_metal_material(color)
+	else:
+		visual.material_override = _create_facade_material(color)
 	body.add_child(visual)
 	var collision := CollisionShape3D.new()
 	var shape := BoxShape3D.new()
@@ -457,7 +483,7 @@ func _create_street_lights() -> void:
 			pole_mesh.bottom_radius = 0.18
 			pole_mesh.height = 6.0
 			pole.mesh = pole_mesh
-			pole.material_override = _create_facade_material(Color(0.23, 0.25, 0.26))
+			pole.material_override = _create_metal_material(Color(0.72, 0.78, 0.8))
 			pole.position = Vector3(side * 14.4, 3.0, float(z))
 			decorations.add_child(pole)
 			var lamp := OmniLight3D.new()
@@ -562,6 +588,7 @@ func _add_building(
 func _create_ground_material() -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.albedo_color = Color(0.22, 0.23, 0.22)
+	material.uv1_scale = SIDEWALK_TILE_REPEAT
 	material.roughness = 1.0
 	return material
 
@@ -588,3 +615,5 @@ func _create_tiled_material(
 	material.uv1_scale = uv_repeat
 	material.roughness = 0.92
 	return material
+
+
