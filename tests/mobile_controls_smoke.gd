@@ -22,6 +22,10 @@ func _run() -> void:
 		return
 
 	controls.visible = true
+	# Define una ventana horizontal típica para que el modo headless use hitboxes móviles reales.
+	controls.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	controls.position = Vector2.ZERO
+	controls.size = Vector2(1280.0, 720.0)
 	_check(failures, controls.size.x > 0.0 and controls.size.y > 0.0, "El HUD no tiene tamaño de pantalla.")
 	_check(failures, game.get_node_or_null("HUD/Objective") != null, "Falta el panel de objetivo.")
 	_check(failures, game.get_node_or_null("HUD/Status") != null, "Falta el panel de ubicación.")
