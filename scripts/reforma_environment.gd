@@ -332,11 +332,12 @@ func _building_height_for(district: String, block_index: int, parcel_index: int)
 			return [8.0, 10.0, 13.0][variation]
 
 
-func _create_facade_material(color: Color) -> StandardMaterial3D:
+func _create_facade_material(color: Color, use_concrete_texture: bool = true) -> StandardMaterial3D:
 	var material := building_material.duplicate() as StandardMaterial3D
 	material.albedo_color = color
 	material.roughness = 0.88
-	facade_materials.append(material)
+	if use_concrete_texture:
+		facade_materials.append(material)
 	return material
 
 
@@ -395,14 +396,14 @@ func _build_landmark_block(
 			trunk_mesh.bottom_radius = 0.32
 			trunk_mesh.height = 2.4
 			trunk.mesh = trunk_mesh
-			trunk.material_override = _create_facade_material(Color(0.30, 0.20, 0.13))
+			trunk.material_override = _create_facade_material(Color(0.30, 0.20, 0.13), false)
 			trunk.position = Vector3(-18 + (tree_index % 4) * 12, 1.2, -18 + int(tree_index / 4) * 36)
 			var canopy := SphereMesh.new()
 			canopy.radius = 2.0
 			canopy.height = 3.8
 			canopy.radial_segments = 7
 			tree.mesh = canopy
-			tree.material_override = _create_facade_material(Color(0.20, 0.42, 0.27))
+			tree.material_override = _create_facade_material(Color(0.20, 0.42, 0.27), false)
 			tree.position = Vector3(-18 + (tree_index % 4) * 12, 3.0, -18 + int(tree_index / 4) * 36)
 			var tree_container := block_root.get_node_or_null("ParkTrees") as StaticBody3D
 			if tree_container == null:
@@ -443,7 +444,9 @@ func _add_landmark_box(
 	mesh.size = size
 	var visual := MeshInstance3D.new()
 	visual.mesh = mesh
-	if box_name.contains("Container") or box_name.contains("Tank") or box_name.contains("Pump"):
+	if box_name == "ParkGreen" or box_name == "ParkCourt" or box_name == "SchoolYard":
+		visual.material_override = _create_tiled_material(color, hash(box_name), Vector3(2.0, 2.0, 1.0))
+	elif box_name.contains("Container") or box_name.contains("Tank") or box_name.contains("Pump"):
 		visual.material_override = _create_metal_material(color)
 	else:
 		visual.material_override = _create_facade_material(color)
@@ -572,7 +575,7 @@ func _add_building(
 	var window_mesh := BoxMesh.new()
 	window_mesh.size = Vector3(dimensions.x * 0.62, minf(1.8, dimensions.y * 0.32), 0.12)
 	window.mesh = window_mesh
-	window.material_override = _create_facade_material(Color(0.11, 0.20, 0.25))
+	window.material_override = _create_facade_material(Color(0.11, 0.20, 0.25), false)
 	window.position = Vector3(0, minf(dimensions.y * 0.22, 3.0), dimensions.z * 0.5 + 0.08)
 	body.add_child(window)
 	if add_roof_feature:
